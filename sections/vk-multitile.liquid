@@ -9,6 +9,7 @@
     <div class="vk-multitile__grid">
       {%- for block in section.blocks -%}
         {%- assign b = block.settings -%}
+        {%- assign tile_alt = b.heading | strip_html | escape -%}
         <div
           class="vk-multitile__tile"
           style="--vk-col: span {{ b.columns }}; --vk-row: span {{ b.rows }}; --vk-ratio: {{ b.ratio }}; --vk-ratio-m: {{ b.ratio_mobile }};"
@@ -16,14 +17,14 @@
         >
           <div class="vk-multitile__media{% if b.image_mobile != blank %} vk-multitile__media--desktop{% endif %}">
             {%- if b.image != blank -%}
-              {{ b.image | image_url: width: 1600 | image_tag: widths: '500, 750, 1000, 1300, 1600', sizes: '(min-width: 990px) 50vw, 100vw', loading: 'lazy', alt: b.heading | strip_html, class: 'vk-multitile__img' }}
+              {{ b.image | image_url: width: 1600 | image_tag: widths: '500, 750, 1000, 1300, 1600', sizes: '(min-width: 990px) 50vw, 100vw', loading: 'lazy', alt: tile_alt, class: 'vk-multitile__img' }}
             {%- else -%}
               {{ 'lifestyle-1' | placeholder_svg_tag: 'vk-multitile__img vk-multitile__placeholder' }}
             {%- endif -%}
           </div>
           {%- if b.image_mobile != blank -%}
             <div class="vk-multitile__media vk-multitile__media--mobile">
-              {{ b.image_mobile | image_url: width: 1100 | image_tag: widths: '375, 550, 750, 1100', sizes: '100vw', loading: 'lazy', alt: b.heading | strip_html, class: 'vk-multitile__img' }}
+              {{ b.image_mobile | image_url: width: 1100 | image_tag: widths: '375, 550, 750, 1100', sizes: '100vw', loading: 'lazy', alt: tile_alt, class: 'vk-multitile__img' }}
             </div>
           {%- endif -%}
           <div class="vk-multitile__content">
