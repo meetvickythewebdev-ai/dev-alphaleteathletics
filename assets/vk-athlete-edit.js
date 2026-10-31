@@ -9,7 +9,11 @@
       .replace(/\{\{\s*amount_no_decimals\s*\}\}/, Math.round(cents / 100))
       .replace(/\{\{\s*amount_with_comma_separator\s*\}\}/, amount.replace('.', ','));
   };
-  const fill = (tpl, map) => Object.entries(map).reduce((t, [k, v]) => t.split(`[${k}]`).join(v), tpl || '');
+  const fill = (tpl, map) => {
+    let out = Object.entries(map).reduce((t, [k, v]) => t.split(`[${k}]`).join(v), tpl || '');
+    if (map.n === 1) out = out.replace(/\b1 items\b/, '1 item');
+    return out;
+  };
 
   class VkAthleteEdit extends HTMLElement {
     connectedCallback() {
