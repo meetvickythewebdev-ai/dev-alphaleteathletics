@@ -5,5 +5,5 @@
 | vid=[{{ section.settings.v | json }}] img=[{{ section.settings.i | image_url: width: 50 }}]
 </div>
 {% schema %}
-{ "name": "VK diag", "settings": [ { "type": "video", "id": "v", "label": "v", "default": "shopify://files/videos/Show_Up_Stronger_16x9.mp4" }, { "type": "image_picker", "id": "i", "label": "i" } ] }
+{ "name": "VK diag", "settings": [ { "type": "video", "id": "v", "label": "v" }, { "type": "image_picker", "id": "i", "label": "i" } ] }
 {% endschema %}
