@@ -74,7 +74,7 @@
         "show_counts": true,
         "highlight_text": "Sale",
         "highlight_color": "#ff0000",
-        "drawer_menu": "footer-help",
+        "drawer_menu": "",
         "show_country": true,
         "search_placeholder": "Search for...",
         "clear_label": "Clear"
