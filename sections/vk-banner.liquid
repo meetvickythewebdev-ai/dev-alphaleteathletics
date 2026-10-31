@@ -1,0 +1,198 @@
+{{ 'vk-banner.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign has_desktop = false
+  if s.video != blank or s.image != blank
+    assign has_desktop = true
+  endif
+  assign has_mobile = false
+  if s.video_mobile != blank or s.image_mobile != blank
+    assign has_mobile = true
+  endif
+  assign heading_tag = 'h2'
+  if s.heading_h1
+    assign heading_tag = 'h1'
+  endif
+-%}
+
+<div
+  class="vk-banner{% if s.animate %} vk-banner--animate{% endif %}"
+  style="
+    --vk-banner-ratio: {{ s.ratio_desktop }};
+    --vk-banner-ratio-mobile: {{ s.ratio_mobile }};
+    --vk-banner-fg: {{ s.text_color }};
+    --vk-banner-bg: {{ s.background }};
+    --vk-banner-overlay: {{ s.overlay_opacity | divided_by: 100.0 }};
+    --vk-banner-pad: {{ s.content_padding }}px;
+    --vk-banner-delay: {{ s.animation_delay }}ms;
+    --vk-banner-duration: {{ s.animation_duration }}ms;
+    --vk-banner-text-size: {{ s.text_size }}px;
+  "
+  data-vk-banner
+>
+  {%- comment -%} Desktop media {%- endcomment -%}
+  <div class="vk-banner__media{% if has_mobile %} vk-banner__media--desktop{% endif %}">
+    {%- if s.video != blank -%}
+      {{ s.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'metadata', image_size: '2160x', class: 'vk-banner__video' }}
+    {%- elsif s.image != blank -%}
+      {{ s.image | image_url: width: 3840 | image_tag: widths: '750, 1100, 1500, 1920, 2560, 3840', sizes: '100vw', class: 'vk-banner__img', loading: s.lazy_media, fetchpriority: s.fetch_priority }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'vk-banner__placeholder' }}
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Mobile media {%- endcomment -%}
+  {%- if has_mobile -%}
+    <div class="vk-banner__media vk-banner__media--mobile">
+      {%- if s.video_mobile != blank -%}
+        {{ s.video_mobile | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'metadata', image_size: '1080x', class: 'vk-banner__video' }}
+      {%- else -%}
+        {{ s.image_mobile | image_url: width: 1500 | image_tag: widths: '375, 550, 750, 1100, 1500', sizes: '100vw', class: 'vk-banner__img', loading: s.lazy_media }}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="vk-banner__content vk-container vk-banner__content--{{ s.align_desktop }} vk-banner__content--v-{{ s.valign_desktop }} vk-banner__content--m-{{ s.align_mobile }} vk-banner__content--mv-{{ s.valign_mobile }}">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'heading' -%}
+          <div class="vk-banner__block vk-banner__heading-wrap" {{ block.shopify_attributes }}>
+            <{{ heading_tag }} class="vk-h{{ block.settings.size }} vk-banner__heading">{{ block.settings.heading }}</{{ heading_tag }}>
+          </div>
+        {%- when 'text' -%}
+          <div class="vk-banner__block" {{ block.shopify_attributes }}>
+            <div class="vk-banner__text">{{ block.settings.text }}</div>
+          </div>
+        {%- when 'buttons' -%}
+          <div class="vk-banner__block vk-banner__buttons" {{ block.shopify_attributes }}>
+            {%- if block.settings.label_1 != blank -%}
+              <a href="{{ block.settings.link_1 }}" class="vk-btn vk-btn--{{ block.settings.style }}">{{ block.settings.label_1 }}</a>
+            {%- endif -%}
+            {%- if block.settings.label_2 != blank -%}
+              <a href="{{ block.settings.link_2 }}" class="vk-btn vk-btn--{{ block.settings.style }}">{{ block.settings.label_2 }}</a>
+            {%- endif -%}
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+<script>
+  (() => {
+    const root = document.currentScript.previousElementSibling;
+    if (!root || !root.classList.contains('vk-banner--animate')) return;
+    const blocks = [...root.querySelectorAll('.vk-banner__block')];
+    const run = () => blocks.forEach((b, i) => {
+      b.style.setProperty('--vk-i', i);
+      b.classList.add('is-in');
+    });
+    if (window.Shopify && Shopify.designMode) { run(); return; }
+    if (!('IntersectionObserver' in window)) { run(); return; }
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) { run(); io.disconnect(); }
+    }, { threshold: 0.2 });
+    io.observe(root);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "VK Full-width banner",
+  "tag": "section",
+  "class": "vk-section vk-section-banner",
+  "settings": [
+    { "type": "header", "content": "Media" },
+    { "type": "video", "id": "video", "label": "Desktop video" },
+    { "type": "image_picker", "id": "image", "label": "Desktop image", "info": "Used when no desktop video is set." },
+    { "type": "video", "id": "video_mobile", "label": "Mobile video" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image" },
+    {
+      "type": "select", "id": "ratio_desktop", "label": "Desktop aspect ratio", "default": "16/9",
+      "options": [ { "value": "16/9", "label": "16:9" }, { "value": "21/9", "label": "21:9" }, { "value": "3/2", "label": "3:2" }, { "value": "4/5", "label": "4:5" } ]
+    },
+    {
+      "type": "select", "id": "ratio_mobile", "label": "Mobile aspect ratio", "default": "4/5",
+      "options": [ { "value": "4/5", "label": "4:5" }, { "value": "9/16", "label": "9:16" }, { "value": "1/1", "label": "1:1" }, { "value": "16/9", "label": "16:9" } ]
+    },
+    { "type": "range", "id": "overlay_opacity", "label": "Bottom gradient strength", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 25 },
+    {
+      "type": "select", "id": "lazy_media", "label": "Image loading", "default": "lazy",
+      "options": [ { "value": "eager", "label": "Eager (first section)" }, { "value": "lazy", "label": "Lazy" } ]
+    },
+    {
+      "type": "select", "id": "fetch_priority", "label": "Image fetch priority", "default": "auto",
+      "options": [ { "value": "high", "label": "High" }, { "value": "auto", "label": "Auto" } ]
+    },
+    { "type": "header", "content": "Content" },
+    { "type": "checkbox", "id": "heading_h1", "label": "Use H1 for the heading", "default": false },
+    {
+      "type": "select", "id": "align_desktop", "label": "Desktop horizontal position", "default": "start",
+      "options": [ { "value": "start", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "end", "label": "Right" } ]
+    },
+    {
+      "type": "select", "id": "valign_desktop", "label": "Desktop vertical position", "default": "center",
+      "options": [ { "value": "start", "label": "Top" }, { "value": "center", "label": "Middle" }, { "value": "end", "label": "Bottom" } ]
+    },
+    {
+      "type": "select", "id": "align_mobile", "label": "Mobile horizontal position", "default": "end",
+      "options": [ { "value": "start", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "end", "label": "Right" } ]
+    },
+    {
+      "type": "select", "id": "valign_mobile", "label": "Mobile vertical position", "default": "end",
+      "options": [ { "value": "start", "label": "Top" }, { "value": "center", "label": "Middle" }, { "value": "end", "label": "Bottom" } ]
+    },
+    { "type": "range", "id": "content_padding", "label": "Content padding", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 32 },
+    { "type": "range", "id": "text_size", "label": "Body text size", "min": 12, "max": 28, "step": 1, "unit": "px", "default": 18 },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#ffffff" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#111111" },
+    { "type": "header", "content": "Animation" },
+    { "type": "checkbox", "id": "animate", "label": "Reveal text on scroll", "default": true },
+    { "type": "range", "id": "animation_delay", "label": "Delay between lines", "min": 0, "max": 500, "step": 25, "unit": "ms", "default": 150 },
+    { "type": "range", "id": "animation_duration", "label": "Line duration", "min": 100, "max": 1500, "step": 50, "unit": "ms", "default": 450 }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "<strong>SHOW UP STRONGER</strong>" },
+        {
+          "type": "select", "id": "size", "label": "Size", "default": "2",
+          "options": [ { "value": "1", "label": "H1" }, { "value": "2", "label": "H2" }, { "value": "3", "label": "H3" }, { "value": "4", "label": "H4" } ]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "limit": 2,
+      "settings": [
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p><strong>You know the feel.</strong></p>" }
+      ]
+    },
+    {
+      "type": "buttons",
+      "name": "Buttons",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label_1", "label": "First button label", "default": "Shop now" },
+        { "type": "url", "id": "link_1", "label": "First button link" },
+        { "type": "text", "id": "label_2", "label": "Second button label" },
+        { "type": "url", "id": "link_2", "label": "Second button link" },
+        {
+          "type": "select", "id": "style", "label": "Style", "default": "light",
+          "options": [ { "value": "light", "label": "White" }, { "value": "dark", "label": "Black" } ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "VK Full-width banner",
+      "blocks": [ { "type": "heading" }, { "type": "text" }, { "type": "buttons" } ]
+    }
+  ]
+}
+{% endschema %}

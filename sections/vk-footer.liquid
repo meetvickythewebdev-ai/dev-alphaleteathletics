@@ -1,0 +1,106 @@
+{{ 'vk-footer.css' | asset_url | stylesheet_tag }}
+
+{%- assign s = section.settings -%}
+<div class="vk-footer" style="--vk-footer-bg: {{ s.background }}; --vk-footer-fg: {{ s.text_color }};">
+  <div class="vk-container vk-footer__main">
+    <div class="vk-footer__grid">
+      {%- for block in section.blocks -%}
+        <div class="vk-footer__block vk-footer__block--{{ block.type }}" style="--vk-span: {{ block.settings.span | default: 1 }};" {{ block.shopify_attributes }}>
+          {%- case block.type -%}
+            {%- when 'menu' -%}
+              <details class="vk-footer__details" data-vk-footer-details open>
+                <summary class="vk-footer__heading">
+                  <span>{{ block.settings.heading | default: block.settings.menu.title }}</span>
+                  <span class="vk-footer__chevron">{% render 'vk-icon', icon: 'plus' %}</span>
+                </summary>
+                <ul class="vk-list-reset vk-footer__links">
+                  {%- for link in block.settings.menu.links -%}
+                    <li><a href="{{ link.url }}" class="vk-footer__link">{{ link.title }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              </details>
+            {%- when 'text' -%}
+              <details class="vk-footer__details" data-vk-footer-details open>
+                <summary class="vk-footer__heading">
+                  <span>{{ block.settings.heading }}</span>
+                  <span class="vk-footer__chevron">{% render 'vk-icon', icon: 'plus' %}</span>
+                </summary>
+                <div class="vk-footer__text">{{ block.settings.text }}</div>
+              </details>
+          {%- endcase -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if s.show_social -%}
+      {% render 'vk-social-icons', class: 'vk-footer__social' %}
+    {%- endif -%}
+  </div>
+
+  <div class="vk-footer__bottom">
+    <div class="vk-container vk-footer__bottom-inner">
+      <p class="vk-footer__copyright">
+        {{ s.copyright_prefix }} &copy; {{ 'now' | date: '%Y' }} {{ s.copyright_text | default: shop.name }} {{ powered_by_link }}
+      </p>
+      {%- if s.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+        <div class="vk-footer__payment">
+          <span class="vk-visually-hidden">{{ 'sections.footer.payment' | t }}</span>
+          <ul class="vk-list-reset vk-footer__payment-list" role="list">
+            {%- for type in shop.enabled_payment_types -%}
+              <li>{{ type | payment_type_svg_tag: class: 'vk-footer__payment-icon' }}</li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const root = document.currentScript.previousElementSibling;
+    const mq = window.matchMedia('(min-width: 990px)');
+    const sync = () => root.querySelectorAll('[data-vk-footer-details]').forEach((d) => { d.open = mq.matches; });
+    sync();
+    mq.addEventListener('change', sync);
+    root.querySelectorAll('[data-vk-footer-details] > summary').forEach((s) => s.addEventListener('click', (e) => { if (mq.matches) e.preventDefault(); }));
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "VK Footer",
+  "tag": "footer",
+  "class": "vk-section vk-section-footer",
+  "settings": [
+    { "type": "color", "id": "background", "label": "Background", "default": "#111111" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },
+    { "type": "checkbox", "id": "show_social", "label": "Show social icons", "info": "Links come from Theme settings > Social media.", "default": true },
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true },
+    { "type": "text", "id": "copyright_prefix", "label": "Copyright prefix", "default": "Copyright" },
+    { "type": "text", "id": "copyright_text", "label": "Copyright name", "default": "FourthPhase. All rights reserved." }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Help" },
+        { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" },
+        { "type": "range", "id": "span", "label": "Desktop columns to span", "min": 1, "max": 3, "step": 1, "default": 1 }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Address" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>13927 South Gessner Road, Missouri City Texas 77489, United States</p>" },
+        { "type": "range", "id": "span", "label": "Desktop columns to span", "min": 1, "max": 4, "step": 1, "default": 2 }
+      ]
+    }
+  ],
+  "presets": [ { "name": "VK Footer", "blocks": [ { "type": "menu" }, { "type": "text" } ] } ],
+  "enabled_on": { "groups": ["footer"] }
+}
+{% endschema %}

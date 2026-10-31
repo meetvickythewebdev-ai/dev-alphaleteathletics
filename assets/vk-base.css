@@ -198,7 +198,7 @@ button:hover > .vk-hover-line { background-size: 100% 1px; background-position: 
   border-radius: 9999px;
   background: #000;
   z-index: -1;
-  transition: transform 0.3s ease, width 0.3s ease;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .vk-tabs__btn {
   appearance: none;
@@ -213,7 +213,7 @@ button:hover > .vk-hover-line { background-size: 100% 1px; background-position: 
   text-transform: uppercase;
   color: #000;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.2s;
   white-space: nowrap;
 }
 .vk-tabs__btn[aria-selected='true'] { color: var(--vk-white); }

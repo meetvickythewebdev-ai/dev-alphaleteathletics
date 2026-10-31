@@ -1,0 +1,137 @@
+{%- comment -%}
+  vk-product-card: product card with hover image, NEW badge, quick add sizes and colour swatches.
+  Params:
+    product   - product object (required)
+    sizes     - img sizes attribute (optional)
+    lazy      - boolean, lazy-load images (default true)
+    quick_add - boolean (default true)
+    swatches  - boolean (default true)
+{%- endcomment -%}
+{%- liquid
+  if sizes == blank
+    assign sizes = '(min-width: 990px) 16vw, (min-width: 750px) 33vw, 50vw'
+  endif
+  assign loading = 'lazy'
+  if lazy == false
+    assign loading = 'eager'
+  endif
+  assign base_title = product.title | split: ' - ' | first
+  assign color_name = ''
+  if product.title contains ' - '
+    assign color_name = product.title | split: ' - ' | last
+  endif
+  assign sid = ''
+  for tag in product.tags
+    if tag contains 'sid:'
+      assign sid = tag
+      break
+    endif
+  endfor
+  assign is_new = false
+  if product.tags contains 'new' or product.tags contains 'New'
+    assign is_new = true
+  endif
+  assign img1 = product.media[0]
+  assign img2 = product.media[1]
+  assign swatch_color = product.metafields.custom.color_swatch.value | append: ''
+  assign refined = product.metafields.custom.refined_fit.value
+  assign stock = 0
+  for v in product.variants
+    if v.available
+      assign stock = stock | plus: 1
+    endif
+  endfor
+-%}
+<vk-product-card
+  class="vk-card{% unless product.available %} vk-card--sold-out{% endunless %}"
+  data-product-id="{{ product.id }}"
+  data-handle="{{ product.handle }}"
+  {% if sid != blank and swatches != false %}data-sid="{{ sid | escape }}"{% endif %}
+>
+  <div class="vk-card__actions">
+    <a href="{{ product.url }}" class="vk-card__link" data-vk-card-link aria-label="{{ product.title | escape }}">
+      <div class="vk-card__media{% if img2 %} vk-card__media--hoverable{% endif %}">
+        {%- if img1 -%}
+          {{ img1 | image_url: width: 900 | image_tag: widths: '300, 450, 600, 750, 900', sizes: sizes, loading: loading, alt: product.title, class: 'vk-card__img', data-vk-card-img: '' }}
+          {%- if img2 -%}
+            {{ img2 | image_url: width: 900 | image_tag: widths: '300, 450, 600, 750, 900', sizes: sizes, loading: 'lazy', alt: '', class: 'vk-card__img vk-card__img--hover', data-vk-card-img2: '' }}
+          {%- endif -%}
+        {%- else -%}
+          {{ 'product-apparel-1' | placeholder_svg_tag: 'vk-card__placeholder' }}
+        {%- endif -%}
+      </div>
+    </a>
+
+    {%- if is_new -%}
+      <span class="vk-card__badge" data-vk-card-badge>{{ 'vk.new' | t }}</span>
+    {%- else -%}
+      <span class="vk-card__badge" data-vk-card-badge hidden>{{ 'vk.new' | t }}</span>
+    {%- endif -%}
+
+    {%- if quick_add != false and product.available -%}
+      <button type="button" class="vk-reset-btn vk-card__qa-toggle" aria-label="{{ 'products.product.add_to_cart' | t }}" aria-expanded="false" data-vk-qa-toggle>
+        <span aria-hidden="true">+</span>
+      </button>
+      <div class="vk-card__qa" data-vk-qa>
+        <div class="vk-card__qa-head" tabindex="0">
+          <span class="vk-card__qa-text">{{ 'vk.quick_add' | t }}</span>
+          <span class="vk-card__qa-icon" aria-hidden="true">+</span>
+        </div>
+        <div class="vk-card__qa-sizes{% if product.variants.size == 1 %} vk-card__qa-sizes--single{% endif %}" data-vk-qa-sizes>
+          {%- for variant in product.variants -%}
+            <button
+              type="button"
+              class="vk-reset-btn vk-card__size{% unless variant.available %} vk-card__size--unavailable{% endunless %}"
+              data-variant-id="{{ variant.id }}"
+              {% unless variant.available %}disabled{% endunless %}
+            >
+              {%- if product.has_only_default_variant -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ variant.title }}{%- endif -%}
+            </button>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="vk-card__content">
+    <div class="vk-card__info">
+      {%- if swatches != false -%}
+        <div class="vk-card__swatches swiper" data-vk-swatches>
+          <div class="swiper-wrapper">
+            {%- if swatch_color != blank -%}
+              <div class="swiper-slide">
+                <a
+                  href="{{ product.url }}"
+                  class="vk-swatch is-selected{% unless product.available %} is-unavailable{% endunless %}"
+                  style="background-color: {{ swatch_color }};"
+                  data-handle="{{ product.handle }}"
+                  {% if refined %}data-refined="true"{% endif %}
+                  aria-label="{{ color_name | escape }}"
+                  title="{{ color_name | escape }}"
+                ></a>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      <h3 class="vk-card__title">
+        <a href="{{ product.url }}" class="vk-card__title-link" data-vk-card-link><span data-vk-card-title>{{ base_title }}</span></a>
+      </h3>
+      {%- if product.type != blank -%}
+        <span class="vk-card__subtitle" data-vk-card-type>{{ product.type }}</span>
+      {%- endif -%}
+      {%- if color_name != blank -%}
+        <span class="vk-card__subtitle vk-card__color" data-vk-card-color>{{ color_name }}</span>
+      {%- endif -%}
+      <span class="vk-card__price" data-vk-card-price>
+        {%- if product.compare_at_price > product.price -%}
+          <span class="vk-card__price-sale">{{ product.price | money }}</span>
+          <s class="vk-card__price-compare">{{ product.compare_at_price | money }}</s>
+        {%- else -%}
+          {{ product.price | money }}
+        {%- endif -%}
+      </span>
+    </div>
+  </div>
+</vk-product-card>

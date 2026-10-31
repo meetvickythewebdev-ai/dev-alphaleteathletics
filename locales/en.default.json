@@ -274,7 +274,6 @@
       "announcement": "Announcement",
       "announcement_bar": "Announcement bar"
     },
-
     "header": {
       "announcement": "Announcement",
       "menu": "Menu",
@@ -528,5 +527,21 @@
       "send_on": "YYYY-MM-DD",
       "send_on_label": "Send on (optional)"
     }
+  },
+  "vk": {
+    "new": "New",
+    "quick_add": "Quick add",
+    "add_to_cart": "Add to cart",
+    "adding": "Adding…",
+    "added": "Added",
+    "sold_out": "Sold out",
+    "view_all": "View all",
+    "previous": "Previous",
+    "next": "Next",
+    "shop_the_look": "Shop the look",
+    "add_selected": "Add selected to cart",
+    "select_size": "Select size",
+    "total": "Total",
+    "products": "Products"
   }
 }

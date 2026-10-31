@@ -1,0 +1,53 @@
+{%- layout none -%}
+{%- comment -%}
+  JSON feed of colour siblings for vk product cards.
+  Usage: /search?type=product&view=vk-swatches&q=tag:"sid:12345"
+{%- endcomment -%}
+{%- paginate search.results by 50 -%}
+[
+{%- for product in search.results -%}
+  {%- if product.object_type == 'product' -%}
+    {%- liquid
+      assign color_name = product.title | split: ' - ' | last
+      assign base_title = product.title | split: ' - ' | first
+      assign is_new = false
+      if product.tags contains 'new' or product.tags contains 'New'
+        assign is_new = true
+      endif
+      assign stock = 0
+      for v in product.variants
+        if v.available
+          assign stock = stock | plus: 1
+        endif
+      endfor
+      assign img1 = product.media[0]
+      assign img2 = product.media[1]
+    -%}
+    {%- unless forloop.first -%},{%- endunless -%}
+    {
+      "id": {{ product.id }},
+      "handle": {{ product.handle | json }},
+      "url": {{ product.url | json }},
+      "title": {{ base_title | json }},
+      "color": {{ product.metafields.custom.color_swatch.value | append: '' | json }},
+      "colorName": {{ color_name | json }},
+      "type": {{ product.type | json }},
+      "available": {{ product.available | json }},
+      "stock": {{ stock }},
+      "isNew": {{ is_new | json }},
+      "refined": {{ product.metafields.custom.refined_fit.value | default: false | json }},
+      "price": {{ product.price | money | json }},
+      "compareAt": {% if product.compare_at_price > product.price %}{{ product.compare_at_price | money | json }}{% else %}null{% endif %},
+      "img": {% if img1 %}{{ img1 | image_url: width: 900 | json }}{% else %}null{% endif %},
+      "img2": {% if img2 %}{{ img2 | image_url: width: 900 | json }}{% else %}null{% endif %},
+      "alt": {{ product.title | json }},
+      "variants": [
+        {%- for v in product.variants -%}
+          {"id": {{ v.id }}, "title": {{ v.title | json }}, "available": {{ v.available | json }}}{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    }
+  {%- endif -%}
+{%- endfor -%}
+]
+{%- endpaginate -%}

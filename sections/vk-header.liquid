@@ -118,7 +118,7 @@
         </a>
       {%- endif -%}
 
-      <a href="{{ routes.cart_url }}" class="vk-header__icon-btn vk-header__cart" id="cart-icon-bubble" aria-label="{{ 'templates.cart.cart' | t }}">
+      <a href="{{ routes.cart_url }}" class="vk-header__icon-btn vk-header__cart" id="vk-cart-icon" data-vk-cart-icon aria-label="{{ 'templates.cart.cart' | t }}">
         {% render 'vk-icon', icon: 'bag' %}
         <span class="vk-header__cart-count{% if cart.item_count == 0 %} is-empty{% endif %}" data-vk-cart-count aria-hidden="true">
           {%- if cart.item_count < 100 -%}{{ cart.item_count }}{%- endif -%}

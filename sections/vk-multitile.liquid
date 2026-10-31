@@ -1,0 +1,86 @@
+{{ 'vk-multitile.css' | asset_url | stylesheet_tag }}
+
+{%- assign s = section.settings -%}
+<div
+  class="vk-multitile{% if s.reveal %} vk-reveal{% endif %}"
+  style="--vk-pt: {{ s.padding_top }}px; --vk-pb: {{ s.padding_bottom }}px; --vk-mt-max: {{ s.max_width }}px;"
+>
+  <div class="vk-container vk-multitile__container">
+    <div class="vk-multitile__grid">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        <div
+          class="vk-multitile__tile"
+          style="--vk-col: span {{ b.columns }}; --vk-row: span {{ b.rows }}; --vk-ratio: {{ b.ratio }}; --vk-ratio-m: {{ b.ratio_mobile }};"
+          {{ block.shopify_attributes }}
+        >
+          <div class="vk-multitile__media{% if b.image_mobile != blank %} vk-multitile__media--desktop{% endif %}">
+            {%- if b.image != blank -%}
+              {{ b.image | image_url: width: 1600 | image_tag: widths: '500, 750, 1000, 1300, 1600', sizes: '(min-width: 990px) 50vw, 100vw', loading: 'lazy', alt: b.heading | strip_html, class: 'vk-multitile__img' }}
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'vk-multitile__img vk-multitile__placeholder' }}
+            {%- endif -%}
+          </div>
+          {%- if b.image_mobile != blank -%}
+            <div class="vk-multitile__media vk-multitile__media--mobile">
+              {{ b.image_mobile | image_url: width: 1100 | image_tag: widths: '375, 550, 750, 1100', sizes: '100vw', loading: 'lazy', alt: b.heading | strip_html, class: 'vk-multitile__img' }}
+            </div>
+          {%- endif -%}
+          <div class="vk-multitile__content">
+            {%- if b.heading != blank -%}
+              <h2 class="vk-multitile__heading">{{ b.heading }}</h2>
+            {%- endif -%}
+            {%- if b.button_label != blank -%}
+              <div class="vk-multitile__buttons">
+                <a href="{{ b.link }}" class="vk-btn vk-btn--light">{{ b.button_label }}</a>
+              </div>
+            {%- endif -%}
+          </div>
+          {%- if b.link != blank -%}
+            <a href="{{ b.link }}" class="vk-multitile__link" tabindex="-1" aria-hidden="true"></a>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "VK Multitile",
+  "tag": "section",
+  "class": "vk-section vk-section-multitile",
+  "settings": [
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 900, "max": 1920, "step": 20, "unit": "px", "default": 1440 },
+    { "type": "checkbox", "id": "reveal", "label": "Fade in on scroll", "default": true },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 16 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 16 }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Tile",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "image_picker", "id": "image_mobile", "label": "Mobile image" },
+        { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "<strong>FOR HER</strong>" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop women" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "range", "id": "columns", "label": "Desktop width (of 6 columns)", "min": 1, "max": 6, "step": 1, "default": 3 },
+        { "type": "range", "id": "rows", "label": "Desktop rows to span", "min": 1, "max": 3, "step": 1, "default": 1 },
+        {
+          "type": "select", "id": "ratio", "label": "Desktop aspect ratio", "default": "1/1",
+          "options": [ { "value": "9/16", "label": "9:16 (tall)" }, { "value": "4/5", "label": "4:5" }, { "value": "1/1", "label": "1:1" }, { "value": "4/3", "label": "4:3" }, { "value": "16/9", "label": "16:9" }, { "value": "auto", "label": "Fill grid row" } ]
+        },
+        {
+          "type": "select", "id": "ratio_mobile", "label": "Mobile aspect ratio", "default": "4/5",
+          "options": [ { "value": "4/5", "label": "4:5" }, { "value": "1/1", "label": "1:1" }, { "value": "4/3", "label": "4:3" }, { "value": "9/16", "label": "9:16" } ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "VK Multitile", "blocks": [ { "type": "tile", "settings": { "rows": 2, "ratio": "9/16" } }, { "type": "tile" }, { "type": "tile", "settings": { "ratio": "4/3" } } ] }
+  ]
+}
+{% endschema %}

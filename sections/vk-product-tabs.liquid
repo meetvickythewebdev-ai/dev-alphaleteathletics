@@ -1,0 +1,147 @@
+{{ 'vk-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'vk-carousel-section.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'vk-product-card.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign s = section.settings
+  assign tabs = section.blocks
+  assign first_url = ''
+  if tabs.size > 0 and tabs[0].settings.collection != blank
+    assign first_url = tabs[0].settings.collection.url
+  endif
+-%}
+
+<div
+  class="vk-carousel-section"
+  style="--vk-pt: {{ s.padding_top }}px; --vk-pb: {{ s.padding_bottom }}px;"
+  data-vk-carousel-scope
+>
+  <div class="vk-container">
+    <div class="vk-carousel-section__head">
+      {%- if s.heading != blank -%}
+        <h2 class="vk-h4 vk-section-heading vk-carousel-section__heading">{{ s.heading }}</h2>
+      {%- endif -%}
+      <div class="vk-carousel-section__controls">
+        {%- if s.view_all_label != blank and first_url != blank -%}
+          <a href="{{ first_url }}" class="vk-btn-text" data-vk-view-all>{{ s.view_all_label }}</a>
+        {%- endif -%}
+        <div class="vk-arrows">
+          <button type="button" class="vk-reset-btn vk-arrow" data-vk-prev aria-label="{{ 'vk.previous' | t }}">{% render 'vk-icon', icon: 'chevron-left' %}</button>
+          <button type="button" class="vk-reset-btn vk-arrow" data-vk-next aria-label="{{ 'vk.next' | t }}">{% render 'vk-icon', icon: 'chevron-right' %}</button>
+        </div>
+      </div>
+    </div>
+
+    {%- if tabs.size > 1 -%}
+      <vk-tabs class="vk-tabs vk-carousel-section__tabs" role="tablist" data-scope="[data-vk-carousel-scope]">
+        <span class="vk-tabs__pill" aria-hidden="true"></span>
+        {%- for block in tabs -%}
+          <button
+            type="button"
+            role="tab"
+            class="vk-tabs__btn"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            data-vk-tab="{{ block.id }}"
+            data-url="{{ block.settings.collection.url }}"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.label }}
+          </button>
+        {%- endfor -%}
+      </vk-tabs>
+    {%- endif -%}
+
+    {%- for block in tabs -%}
+      {%- assign collection = block.settings.collection -%}
+      <div class="vk-carousel-section__panel{% if forloop.first %} is-active{% endif %}" data-vk-panel="{{ block.id }}" {% unless forloop.first %}hidden{% endunless %}>
+        <vk-carousel
+          class="swiper vk-carousel-section__swiper"
+          data-prev="{% if forloop.first %}[data-vk-prev]{% endif %}"
+          data-next="{% if forloop.first %}[data-vk-next]{% endif %}"
+          data-options='{"slidesPerView": {{ s.per_view_mobile }}, "spaceBetween": 12, "breakpoints": {"750": {"slidesPerView": {{ s.per_view_tablet }}}, "990": {"slidesPerView": {{ s.per_view_laptop }}}, "1400": {"slidesPerView": {{ s.per_view_desktop }}}}}'
+        >
+          <div class="swiper-wrapper">
+            {%- if collection != blank and collection.products.size > 0 -%}
+              {%- for product in collection.products limit: block.settings.limit -%}
+                <div class="swiper-slide">
+                  {% render 'vk-product-card', product: product, sizes: '(min-width: 1400px) 16vw, (min-width: 990px) 20vw, (min-width: 750px) 33vw, 50vw' %}
+                </div>
+              {%- endfor -%}
+            {%- else -%}
+              {%- for i in (1..6) -%}
+                <div class="swiper-slide">
+                  <div class="vk-card">
+                    <div class="vk-card__media">{{ 'product-apparel-1' | placeholder_svg_tag: 'vk-card__placeholder' }}</div>
+                  </div>
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+        </vk-carousel>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+<script>
+  (() => {
+    const scope = document.currentScript.previousElementSibling;
+    // Re-bind the shared arrows to whichever panel is visible.
+    scope.addEventListener('vk:tab-change', () => {
+      const panel = scope.querySelector('[data-vk-panel]:not([hidden]) vk-carousel');
+      if (!panel) return;
+      const bind = () => {
+        const sw = panel.swiper;
+        if (!sw) return;
+        const prev = scope.querySelector('[data-vk-prev]');
+        const next = scope.querySelector('[data-vk-next]');
+        const p = prev.cloneNode(true); const n = next.cloneNode(true);
+        prev.replaceWith(p); next.replaceWith(n);
+        p.addEventListener('click', () => sw.slidePrev());
+        n.addEventListener('click', () => sw.slideNext());
+        const sync = () => { p.disabled = sw.isBeginning; n.disabled = sw.isEnd; };
+        sw.on('slideChange', sync); sw.on('reachEnd', sync); sw.on('reachBeginning', sync); sync();
+      };
+      panel.init(); bind();
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "VK Product tabs",
+  "tag": "section",
+  "class": "vk-section vk-section-product-tabs",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "<strong>NEW ARRIVALS</strong>" },
+    { "type": "text", "id": "view_all_label", "label": "View all label", "default": "View All" },
+    { "type": "range", "id": "per_view_mobile", "label": "Cards per view (mobile)", "min": 1, "max": 3, "step": 0.1, "default": 2 },
+    { "type": "range", "id": "per_view_tablet", "label": "Cards per view (tablet)", "min": 2, "max": 4, "step": 0.1, "default": 3 },
+    { "type": "range", "id": "per_view_laptop", "label": "Cards per view (laptop)", "min": 3, "max": 6, "step": 0.1, "default": 5 },
+    { "type": "range", "id": "per_view_desktop", "label": "Cards per view (desktop 1400+)", "min": 3, "max": 7, "step": 0.1, "default": 6 },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 32 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 32 }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Tab label", "default": "Women's" },
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "range", "id": "limit", "label": "Products to show", "min": 2, "max": 24, "step": 1, "default": 10 }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "VK Product tabs",
+      "blocks": [
+        { "type": "tab", "settings": { "label": "Women's" } },
+        { "type": "tab", "settings": { "label": "Men's" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
