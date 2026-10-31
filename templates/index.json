@@ -59,16 +59,18 @@
           "type": "tab",
           "settings": {
             "label": "Women's",
-            "collection": "womens-new-arrivals",
-            "limit": 10
+            "collection": "womens-new-this-week-carousel",
+            "limit": 10,
+            "view_all_link": "shopify://collections/womens-new-arrivals"
           }
         },
         "tab2": {
           "type": "tab",
           "settings": {
             "label": "Men's",
-            "collection": "mens-new-arrivals",
-            "limit": 10
+            "collection": "mens-new-this-week-carousel",
+            "limit": 10,
+            "view_all_link": "shopify://collections/mens-new-arrivals"
           }
         }
       },

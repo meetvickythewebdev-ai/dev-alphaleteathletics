@@ -6,8 +6,12 @@
   assign s = section.settings
   assign tabs = section.blocks
   assign first_url = ''
-  if tabs.size > 0 and tabs[0].settings.collection != blank
-    assign first_url = tabs[0].settings.collection.url
+  if tabs.size > 0
+    if tabs[0].settings.view_all_link != blank
+      assign first_url = tabs[0].settings.view_all_link
+    elsif tabs[0].settings.collection != blank
+      assign first_url = tabs[0].settings.collection.url
+    endif
   endif
 -%}
 
@@ -42,7 +46,7 @@
             class="vk-tabs__btn"
             aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
             data-vk-tab="{{ block.id }}"
-            data-url="{{ block.settings.collection.url }}"
+            data-url="{% if block.settings.view_all_link != blank %}{{ block.settings.view_all_link }}{% else %}{{ block.settings.collection.url }}{% endif %}"
             {{ block.shopify_attributes }}
           >
             {{ block.settings.label }}
@@ -130,6 +134,7 @@
       "settings": [
         { "type": "text", "id": "label", "label": "Tab label", "default": "Women's" },
         { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "url", "id": "view_all_link", "label": "View all link", "info": "Defaults to the collection." },
         { "type": "range", "id": "limit", "label": "Products to show", "min": 2, "max": 24, "step": 1, "default": 10 }
       ]
     }
