@@ -1,5 +1,6 @@
 <div id="vkdiag">
-{%- for n in "W_Seamless_16x9.jpg,AE_Sofs_4x5.jpg,W_Bra_v4_4x5.jpg,Mega_W_Bra_4x5.jpg" | split: ',' -%}
+{%- assign names = "W_Seamless_16x9.jpg,AE_Sofs_4x5.jpg,W_Bra_v4_4x5.jpg,Mega_W_Bra_4x5.jpg" | split: "," -%}
+{%- for n in names -%}
 {{ n }}=[{{ images[n] | image_url: width: 50 }}] 
 {%- endfor -%}
 | vid=[{{ section.settings.v | json }}] img=[{{ section.settings.i | image_url: width: 50 }}]
