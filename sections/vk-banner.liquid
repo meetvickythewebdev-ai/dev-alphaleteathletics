@@ -3,11 +3,11 @@
 {%- liquid
   assign s = section.settings
   assign has_desktop = false
-  if s.video != blank or s.image != blank
+  if s.video != blank or s.image != blank or s.video_url != blank
     assign has_desktop = true
   endif
   assign has_mobile = false
-  if s.video_mobile != blank or s.image_mobile != blank
+  if s.video_mobile != blank or s.image_mobile != blank or s.video_url_mobile != blank
     assign has_mobile = true
   endif
   assign heading_tag = 'h2'
@@ -35,6 +35,8 @@
   <div class="vk-banner__media{% if has_mobile %} vk-banner__media--desktop{% endif %}">
     {%- if s.video != blank -%}
       {{ s.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'metadata', image_size: '2160x', class: 'vk-banner__video' }}
+    {%- elsif s.video_url != blank -%}
+      <video class="vk-banner__video" src="{{ s.video_url }}" autoplay loop muted playsinline preload="metadata"></video>
     {%- elsif s.image != blank -%}
       {{ s.image | image_url: width: 3840 | image_tag: widths: '750, 1100, 1500, 1920, 2560, 3840', sizes: '100vw', class: 'vk-banner__img', loading: s.lazy_media, fetchpriority: s.fetch_priority }}
     {%- else -%}
@@ -47,6 +49,8 @@
     <div class="vk-banner__media vk-banner__media--mobile">
       {%- if s.video_mobile != blank -%}
         {{ s.video_mobile | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'metadata', image_size: '1080x', class: 'vk-banner__video' }}
+      {%- elsif s.video_url_mobile != blank -%}
+        <video class="vk-banner__video" src="{{ s.video_url_mobile }}" autoplay loop muted playsinline preload="metadata"></video>
       {%- else -%}
         {{ s.image_mobile | image_url: width: 1500 | image_tag: widths: '375, 550, 750, 1100, 1500', sizes: '100vw', class: 'vk-banner__img', loading: s.lazy_media }}
       {%- endif -%}
@@ -104,8 +108,10 @@
   "settings": [
     { "type": "header", "content": "Media" },
     { "type": "video", "id": "video", "label": "Desktop video" },
+    { "type": "text", "id": "video_url", "label": "Desktop video URL (optional)", "info": "Direct .mp4 link, used when no desktop video is selected." },
     { "type": "image_picker", "id": "image", "label": "Desktop image", "info": "Used when no desktop video is set." },
     { "type": "video", "id": "video_mobile", "label": "Mobile video" },
+    { "type": "text", "id": "video_url_mobile", "label": "Mobile video URL (optional)" },
     { "type": "image_picker", "id": "image_mobile", "label": "Mobile image" },
     {
       "type": "select", "id": "ratio_desktop", "label": "Desktop aspect ratio", "default": "16/9",
