@@ -263,4 +263,5 @@ body.vk-scroll-lock { overflow: hidden; }
 .vk-multitile__link:empty,
 .vk-card__swatches:empty,
 .vk-tabs__pill:empty,
-.vk-ae-drawer__overlay:empty { display: block; }
+.vk-ae-drawer__overlay:empty,
+.vk-page-overlay:empty { display: block; }
