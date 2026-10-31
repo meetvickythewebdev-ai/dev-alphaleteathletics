@@ -3,17 +3,23 @@
   Params: group (link), highlight (downcased title to highlight), show_counts (bool)
 {%- endcomment -%}
 <div class="vk-mega__group">
-  <a href="{{ group.url }}" class="vk-mega__group-title">{{ group.title }}</a>
+  <a href="{{ group.url }}" class="vk-mega__group-title"><span class="vk-mega__line">{{ group.title }}</span></a>
   {%- if group.links.size > 0 -%}
     <ul class="vk-list-reset vk-mega__sublinks">
       {%- for child in group.links -%}
         {%- assign child_title = child.title | strip | downcase -%}
         <li class="vk-mega__sublink-item">
-          <a href="{{ child.url }}" class="vk-mega__sublink{% if highlight != blank and child_title == highlight %} vk-is-highlight{% endif %}">
-            <span class="vk-mega__sublink-text">{{ child.title }}</span>
-            {%- if show_counts and child.type == 'collection_link' and child.object.products_count > 0 -%}
-              <span class="vk-mega__count">{{ child.object.products_count }}</span>
-            {%- endif -%}
+          <a href="{{ child.url }}" class="vk-mega__sublink">
+            <span class="vk-mega__line">
+              {%- if highlight != blank and child_title == highlight -%}
+                <span class="vk-is-highlight">{{ child.title }}</span>
+              {%- else -%}
+                {{ child.title }}
+              {%- endif -%}
+              {%- if show_counts and child.type == 'collection_link' and child.object.products_count > 0 -%}
+                <span class="vk-mega__count" data-vk-count="{{ child.object.products_count }}">0</span>
+              {%- endif -%}
+            </span>
           </a>
         </li>
       {%- endfor -%}

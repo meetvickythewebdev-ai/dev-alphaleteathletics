@@ -72,23 +72,21 @@
       this.openers = [...document.querySelectorAll('[data-vk-search-open]')];
       this.cache = new Map();
       this.openers.forEach((btn) => btn.addEventListener('click', (e) => { e.preventDefault(); this.open(btn); }));
-      this.querySelector('[data-vk-search-close]').addEventListener('click', () => this.close());
-      this.clearBtn.addEventListener('click', () => { this.input.value = ''; this.render(''); this.input.focus(); });
+      this.querySelectorAll('[data-vk-search-close]').forEach((b) => b.addEventListener('click', () => this.close()));
+      this.clearBtn.addEventListener('click', () => { this.input.value = ''; this.search(''); this.input.focus(); });
       this.input.addEventListener('input', () => {
+        const term = this.input.value.trim();
+        this.clearBtn.disabled = !this.input.value;
         clearTimeout(this.debounce);
-        this.debounce = setTimeout(() => this.search(this.input.value.trim()), 250);
+        this.debounce = setTimeout(() => this.search(term), 250);
       });
       this.addEventListener('keydown', (e) => { if (e.key === 'Escape') this.close(); });
-      this.onOverlay = () => this.close();
-      document.addEventListener('vk:overlay-click', this.onOverlay);
     }
-    disconnectedCallback() { document.removeEventListener('vk:overlay-click', this.onOverlay); }
     open(opener) {
       this.opener = opener;
       this.classList.add('is-open');
       this.setAttribute('aria-hidden', 'false');
       this.openers.forEach((b) => b.setAttribute('aria-expanded', 'true'));
-      window.vkOverlay?.show(this, { zIndex: 899 });
       window.vkScrollLock?.lock();
       setTimeout(() => this.input.focus(), 50);
     }
@@ -97,12 +95,11 @@
       this.classList.remove('is-open');
       this.setAttribute('aria-hidden', 'true');
       this.openers.forEach((b) => b.setAttribute('aria-expanded', 'false'));
-      window.vkOverlay?.hide(this);
       window.vkScrollLock?.unlock();
       this.opener?.focus();
     }
     async search(term) {
-      this.clearBtn.hidden = !term;
+      this.clearBtn.disabled = !this.input.value;
       if (!term) { this.render(''); return; }
       if (this.cache.has(term)) { this.render(this.cache.get(term)); return; }
       const root = (window.Shopify?.routes?.root || '/').replace(/\/$/, '');
@@ -110,6 +107,7 @@
       try {
         this.abort?.abort();
         this.abort = new AbortController();
+        this.results.classList.add('is-loading');
         const res = await fetch(url, { signal: this.abort.signal });
         if (!res.ok) throw new Error(res.status);
         const html = await res.text();
@@ -119,9 +117,14 @@
         if (this.input.value.trim() === term) this.render(content);
       } catch (err) {
         if (err.name !== 'AbortError') this.render('');
+      } finally {
+        this.results.classList.remove('is-loading');
       }
     }
-    render(html) { this.results.innerHTML = html; }
+    render(html) {
+      this.results.innerHTML = html;
+      this.results.hidden = !html.trim();
+    }
   }
   if (!customElements.get('vk-search-drawer')) customElements.define('vk-search-drawer', VkSearchDrawer);
 
@@ -176,4 +179,64 @@
     }
   }
   if (!customElements.get('vk-menu-drawer')) customElements.define('vk-menu-drawer', VkMenuDrawer);
+
+  /* Mega menu collection counts: count up from 0 on hover, count down on leave (reference behaviour) */
+  const countUp = (el) => {
+    const target = parseInt(el.dataset.vkCount, 10) || 0;
+    cancelAnimationFrame(el._vkRaf);
+    el.textContent = '0';
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(-4px)';
+    const start = performance.now();
+    const step = (now) => {
+      const p = Math.min((now - start) / 600, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.floor(target * eased);
+      if (p < 0.5) {
+        const f = Math.min(p * 2, 1);
+        el.style.opacity = f * 0.7;
+        el.style.transform = `translateY(${-4 * (1 - f)}px)`;
+      } else {
+        el.style.opacity = '0.7';
+        el.style.transform = 'translateY(0)';
+      }
+      if (p < 1) el._vkRaf = requestAnimationFrame(step);
+      else el.textContent = target;
+    };
+    el._vkRaf = requestAnimationFrame(step);
+  };
+  const countDown = (el) => {
+    cancelAnimationFrame(el._vkRaf);
+    const startOpacity = parseFloat(el.style.opacity) || 0;
+    const current = parseInt(el.textContent, 10) || 0;
+    if (!startOpacity || !current) {
+      el.textContent = '0';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(-4px)';
+      return;
+    }
+    const start = performance.now();
+    const step = (now) => {
+      const p = Math.min((now - start) / 250, 1);
+      const e = p * p;
+      el.style.opacity = startOpacity * (1 - e);
+      el.style.transform = `translateY(${-4 * e}px)`;
+      if (p < 0.6) el.textContent = Math.max(0, Math.floor(current * (1 - p / 0.6)));
+      else el.textContent = '0';
+      if (p < 1) el._vkRaf = requestAnimationFrame(step);
+    };
+    el._vkRaf = requestAnimationFrame(step);
+  };
+  const bindCounts = (root = document) => {
+    root.querySelectorAll('.vk-mega__sublink-item, .vk-drawer__sublink-item').forEach((item) => {
+      const el = item.querySelector('[data-vk-count]');
+      if (!el || item.dataset.vkCountBound) return;
+      item.dataset.vkCountBound = '1';
+      item.addEventListener('mouseenter', () => countUp(el));
+      item.addEventListener('mouseleave', () => countDown(el));
+    });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => bindCounts());
+  else bindCounts();
+  document.addEventListener('shopify:section:load', (e) => bindCounts(e.target));
 })();

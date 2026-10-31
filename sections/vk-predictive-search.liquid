@@ -1,32 +1,31 @@
 {%- comment -%}
   vk-predictive-search: rendered by /search/suggest?section_id=vk-predictive-search for the header search drawer.
+  Results use the same product card as the rest of the store (reference behaviour).
 {%- endcomment -%}
 <div id="vk-predictive-search">
   {%- if predictive_search.performed -%}
     {%- assign products = predictive_search.resources.products -%}
-    {%- if products.size > 0 -%}
-      <p class="vk-search__label">{{ 'templates.search.products' | t }}</p>
-      <ul class="vk-list-reset vk-search__grid">
-        {%- for product in products -%}
-          <li>
-            <a href="{{ product.url }}" class="vk-search__item">
-              <div class="vk-search__media">
-                {%- if product.featured_media -%}
-                  {{ product.featured_media | image_url: width: 500 | image_tag: loading: 'lazy', widths: '250, 375, 500', sizes: '(min-width: 990px) 12vw, 50vw', alt: product.title }}
-                {%- endif -%}
-              </div>
-              <p class="vk-search__title">{{ product.title | split: ' - ' | first }}</p>
-              <p class="vk-search__price">{{ product.price | money }}</p>
-            </a>
-          </li>
-        {%- endfor -%}
-      </ul>
-      <a href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&type=product" class="vk-btn-text vk-search__all">
-        {{ 'sections.featured_collection.view_all' | t }}
-      </a>
-    {%- else -%}
-      <p class="vk-search__empty">{{ 'templates.search.no_results' | t: terms: predictive_search.terms }}</p>
-    {%- endif -%}
+    <div class="vk-search__results">
+      {%- if products.size > 0 -%}
+        <div class="vk-search__col vk-search__col--products">
+          <h6 class="vk-search__label">{{ 'templates.search.products' | t }}</h6>
+          <div class="vk-search__grid">
+            {%- for product in products -%}
+              {% render 'vk-product-card', product: product, sizes: '(min-width: 990px) 15vw, (min-width: 750px) 30vw, 45vw' %}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- else -%}
+        <div class="vk-search__col">
+          <p class="vk-search__empty">{{ 'templates.search.no_results' | t: terms: predictive_search.terms }}</p>
+        </div>
+      {%- endif -%}
+      <div class="vk-search__col vk-search__col--footer">
+        <button type="submit" class="vk-reset-btn vk-btn-text vk-search__all">
+          {{ 'templates.search.search_for' | t: terms: predictive_search.terms }}
+        </button>
+      </div>
+    </div>
   {%- endif -%}
 </div>
 

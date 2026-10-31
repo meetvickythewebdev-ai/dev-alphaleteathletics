@@ -1,5 +1,7 @@
 {{ 'vk-header.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'vk-header.js' | asset_url }}" defer="defer"></script>
+{{ 'vk-product-card.css' | asset_url | stylesheet_tag: preload: false }}
+<script src="{{ 'vk-product-card.js' | asset_url }}" defer="defer"></script>
 
 {%- liquid
   assign menu = section.settings.menu
@@ -130,28 +132,35 @@
 
   {%- comment -%} Search drawer {%- endcomment -%}
   <vk-search-drawer id="VkSearchDrawer" class="vk-search" aria-hidden="true" data-section="{{ section.id }}">
-    <form action="{{ routes.search_url }}" method="get" role="search" class="vk-search__bar vk-container">
-      <span class="vk-search__icon">{% render 'vk-icon', icon: 'search' %}</span>
-      <input type="hidden" name="type" value="product">
-      <input
-        id="VkSearchInput"
-        class="vk-search__input"
-        type="search"
-        name="q"
-        placeholder="{{ section.settings.search_placeholder | escape }}"
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="false"
-        aria-label="{{ 'general.search.search' | t }}"
-        data-vk-search-input
-      >
-      <button type="button" class="vk-reset-btn vk-search__clear" hidden data-vk-search-clear>{{ section.settings.clear_label }}</button>
-      <button type="button" class="vk-reset-btn vk-search__close" aria-label="{{ 'accessibility.close' | t }}" data-vk-search-close>
-        {% render 'vk-icon', icon: 'close' %}
-      </button>
-    </form>
-    <div class="vk-search__results vk-container" data-vk-search-results aria-live="polite"></div>
+    <div class="vk-search__overlay" data-vk-search-close></div>
+    <div class="vk-search__panel">
+      <form action="{{ routes.search_url }}" method="get" role="search" class="vk-search__form">
+        <div class="vk-search__controls">
+          <button type="submit" class="vk-reset-btn vk-search__submit" aria-label="{{ 'general.search.search' | t }}">{% render 'vk-icon', icon: 'search' %}</button>
+          <input type="hidden" name="type" value="product">
+          <div class="vk-search__field">
+            <label for="VkSearchInput" class="vk-visually-hidden">{{ 'general.search.search' | t }}</label>
+            <input
+              id="VkSearchInput"
+              class="vk-search__input"
+              type="search"
+              name="q"
+              placeholder="{{ section.settings.search_placeholder | escape }}"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              data-vk-search-input
+            >
+          </div>
+          <button type="button" class="vk-reset-btn vk-search__clear" disabled data-vk-search-clear>{{ section.settings.clear_label }}</button>
+          <button type="button" class="vk-reset-btn vk-search__close" aria-label="{{ 'accessibility.close' | t }}" data-vk-search-close>
+            <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M8 8L16 16M16 8L8 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="vk-search__body" data-vk-search-results aria-live="polite" hidden></div>
+      </form>
+    </div>
   </vk-search-drawer>
 
   {%- comment -%} Mobile menu drawer {%- endcomment -%}

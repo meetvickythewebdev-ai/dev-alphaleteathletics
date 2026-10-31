@@ -192,7 +192,7 @@
       if (badge) badge.hidden = !p.isNew;
       const sizes = this.querySelector('[data-vk-qa-sizes]');
       if (sizes) {
-        sizes.innerHTML = p.variants.map((v) => `<button type="button" class="vk-reset-btn vk-card__size${v.available ? '' : ' vk-card__size--unavailable'}" data-variant-id="${v.id}"${v.available ? '' : ' disabled'}>${v.title === 'Default Title' ? (window.vkStrings?.addToCart || 'Add to cart') : v.title}</button>`).join('');
+        sizes.innerHTML = p.variants.map((v) => `<button type="button" class="vk-reset-btn vk-card__size${v.title === 'Default Title' ? ' vk-card__size--single' : ''}${v.available ? '' : ' vk-card__size--unavailable'}" data-variant-id="${v.id}"${v.available ? '' : ' disabled'}>${v.title === 'Default Title' ? (window.vkStrings?.addToCart || 'Add to cart') : v.title}</button>`).join('');
       }
       this.querySelectorAll('.vk-swatch').forEach((s) => s.classList.toggle('is-selected', s.dataset.handle === p.handle));
       if (this.wish) { this.wish.dataset.vkWish = p.handle; wishSync(this.wish); }

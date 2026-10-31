@@ -42,7 +42,7 @@
   bottom: 1.2rem;
   z-index: 2;
   display: block;
-  height: 2.4rem;
+  box-sizing: border-box;
   padding: 0.6rem 0.8rem;
   border: 1px solid rgba(17, 17, 17, 0.2);
   border-radius: 0.4rem;
@@ -82,6 +82,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.2rem 1.6rem 0.8rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -94,7 +95,6 @@
   text-transform: uppercase;
   color: #333;
 }
-.vk-card__qa-icon { font-size: 1.6rem; font-weight: 300; line-height: 1; color: #333; transition: transform 0.2s ease; }
 .vk-card__qa-sizes {
   display: flex;
   flex-wrap: wrap;
@@ -106,6 +106,7 @@
   transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .vk-card__qa-sizes--single { justify-content: center; }
+.vk-card__size--single { min-width: auto; padding: 0.6rem 1.6rem; font-size: 1.1rem; font-weight: 600; }
 .vk-card__size {
   position: relative;
   overflow: hidden;
@@ -180,7 +181,6 @@
     pointer-events: auto;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s;
   }
-  .vk-card__qa-head:hover .vk-card__qa-icon { transform: rotate(45deg); }
   .vk-card__qa-head:hover ~ .vk-card__qa-sizes,
   .vk-card__qa-sizes:hover,
   .vk-card__qa:focus-within .vk-card__qa-sizes { max-height: 12rem; opacity: 1; padding: 1.2rem 1.6rem; }
@@ -210,7 +210,7 @@
 .vk-card__size:nth-child(8) { transition-delay: 0.35s; }
 
 /* Content ------------------------------------------------------------------ */
-.vk-card__content { position: relative; display: flex; flex-direction: column; gap: 0.8rem; padding-bottom: 1.2rem; transition: opacity 0.4s ease-out, transform 0.4s ease-out; }
+.vk-card__content { position: relative; display: flex; flex-direction: column; gap: 0.8rem; padding-bottom: 2rem; transition: opacity 0.4s ease-out, transform 0.4s ease-out; }
 .vk-card__info { display: flex; flex-direction: column; justify-content: space-between; gap: 0.2rem; }
 .vk-card__swatches { width: 100%; overflow: hidden; margin: 0; min-height: 2rem; transition: opacity 0.3s ease-in; }
 .vk-card__swatches .swiper-wrapper { align-items: center; }

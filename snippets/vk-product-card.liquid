@@ -81,13 +81,12 @@
       <div class="vk-card__qa" data-vk-qa>
         <div class="vk-card__qa-head" tabindex="0">
           <span class="vk-card__qa-text">{{ 'vk.quick_add' | t }}</span>
-          <span class="vk-card__qa-icon" aria-hidden="true">+</span>
         </div>
         <div class="vk-card__qa-sizes{% if product.variants.size == 1 %} vk-card__qa-sizes--single{% endif %}" data-vk-qa-sizes>
           {%- for variant in product.variants -%}
             <button
               type="button"
-              class="vk-reset-btn vk-card__size{% unless variant.available %} vk-card__size--unavailable{% endunless %}"
+              class="vk-reset-btn vk-card__size{% if product.has_only_default_variant %} vk-card__size--single{% endif %}{% unless variant.available %} vk-card__size--unavailable{% endunless %}"
               data-variant-id="{{ variant.id }}"
               {% unless variant.available %}disabled{% endunless %}
             >
