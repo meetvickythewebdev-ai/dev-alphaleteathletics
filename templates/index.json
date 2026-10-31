@@ -49,7 +49,9 @@
         "background": "#111111",
         "animate": true,
         "animation_delay": 150,
-        "animation_duration": 450
+        "animation_duration": 450,
+        "video": "shopify://files/videos/Show_Up_Stronger_16x9.mp4",
+        "video_mobile": "shopify://files/videos/Show_Up_Stronger_4x5.mp4"
       }
     },
     "new_arrivals": {
