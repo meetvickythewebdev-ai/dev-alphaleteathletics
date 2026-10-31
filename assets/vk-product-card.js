@@ -74,11 +74,18 @@
   };
   window.vkCartAdd = cartAdd;
 
+  const WISH_KEY = 'vk:wishlist';
+  const wishList = () => { try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch (e) { return []; } };
+  const wishSave = (list) => { try { localStorage.setItem(WISH_KEY, JSON.stringify(list)); } catch (e) { /* storage blocked */ } };
+  const wishSync = (btn) => btn && btn.setAttribute('aria-pressed', wishList().includes(btn.dataset.vkWish) ? 'true' : 'false');
+
   class VkProductCard extends HTMLElement {
     connectedCallback() {
       this.qa = this.querySelector('[data-vk-qa]');
       this.toggle = this.querySelector('[data-vk-qa-toggle]');
       this.swatchesEl = this.querySelector('[data-vk-swatches]');
+      this.wish = this.querySelector('[data-vk-wish]');
+      wishSync(this.wish);
       if (this.toggle) this.toggle.addEventListener('click', (e) => { e.preventDefault(); this.setOpen(!this.qa.classList.contains('is-open')); });
       this.addEventListener('click', (e) => this.onClick(e));
       if (this.dataset.sid && this.swatchesEl) {
@@ -96,6 +103,17 @@
       this.toggle?.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
     async onClick(e) {
+      const wish = e.target.closest('[data-vk-wish]');
+      if (wish) {
+        e.preventDefault();
+        const list = wishList();
+        const i = list.indexOf(wish.dataset.vkWish);
+        if (i > -1) list.splice(i, 1); else list.push(wish.dataset.vkWish);
+        wishSave(list);
+        wishSync(wish);
+        document.dispatchEvent(new CustomEvent('vk:wishlist-change', { detail: { list } }));
+        return;
+      }
       const size = e.target.closest('.vk-card__size');
       if (size && !size.disabled) {
         e.preventDefault();
@@ -177,6 +195,7 @@
         sizes.innerHTML = p.variants.map((v) => `<button type="button" class="vk-reset-btn vk-card__size${v.available ? '' : ' vk-card__size--unavailable'}" data-variant-id="${v.id}"${v.available ? '' : ' disabled'}>${v.title === 'Default Title' ? (window.vkStrings?.addToCart || 'Add to cart') : v.title}</button>`).join('');
       }
       this.querySelectorAll('.vk-swatch').forEach((s) => s.classList.toggle('is-selected', s.dataset.handle === p.handle));
+      if (this.wish) { this.wish.dataset.vkWish = p.handle; wishSync(this.wish); }
     }
   }
   customElements.define('vk-product-card', VkProductCard);

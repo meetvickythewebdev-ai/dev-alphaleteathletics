@@ -7,7 +7,7 @@
 
 <div
   class="vk-carousel-section vk-category-tabs{% if s.reveal %} vk-reveal{% endif %}"
-  style="--vk-pt: {{ s.padding_top }}px; --vk-pb: {{ s.padding_bottom }}px;"
+  style="--vk-pt: {{ s.padding_top }}px; --vk-pb: {{ s.padding_bottom }}px; --vk-pt-m: {{ s.padding_top_mobile }}px; --vk-pb-m: {{ s.padding_bottom_mobile }}px;"
   data-vk-carousel-scope
 >
   <div class="vk-container">
@@ -52,7 +52,7 @@
         <div class="vk-carousel-section__panel{% if panel_index == 0 %} is-active{% endif %}" data-vk-panel="{{ block.id }}" {% if panel_index > 0 %}hidden{% endif %}>
           <vk-carousel
             class="swiper vk-carousel-section__swiper"
-            data-options='{"slidesPerView": {{ s.per_view_mobile }}, "spaceBetween": 12, "breakpoints": {"750": {"slidesPerView": {{ s.per_view_desktop }}}}}'
+            data-options='{"followFinger": false, "slidesPerView": {{ s.per_view_mobile }}, "spaceBetween": 12, "breakpoints": {"750": {"slidesPerView": {{ s.per_view_desktop }}}}}'
           >
             <div class="swiper-wrapper">
         {%- assign panel_open = true -%}
@@ -70,11 +70,11 @@
                     {%- endif -%}
                   </div>
                   <div class="vk-cat-card__content">
-                    <h3 class="vk-cat-card__title"><span>{{ block.settings.title }}</span></h3>
-                    {%- if block.settings.text != blank -%}
-                      <div class="vk-cat-card__text">{{ block.settings.text }}</div>
-                    {%- endif -%}
+                    <h3 class="vk-cat-card__title"><span><strong>{{ block.settings.title }}</strong></span></h3>
                   </div>
+                  {%- if block.settings.text != blank -%}
+                    <div class="vk-cat-card__text">{{ block.settings.text }}</div>
+                  {%- endif -%}
                 </a>
               </div>
       {%- endif -%}
@@ -97,8 +97,10 @@
     { "type": "range", "id": "per_view_mobile", "label": "Cards per view (mobile)", "min": 1, "max": 3, "step": 0.1, "default": 2.3 },
     { "type": "range", "id": "per_view_desktop", "label": "Cards per view (tablet & desktop)", "min": 3, "max": 7, "step": 0.1, "default": 5 },
     { "type": "checkbox", "id": "reveal", "label": "Fade in on scroll", "default": true },
-    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 32 },
-    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 48 }
+    { "type": "range", "id": "padding_top", "label": "Top padding (desktop)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 32 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (desktop)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 36 },
+    { "type": "range", "id": "padding_top_mobile", "label": "Top padding (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
+    { "type": "range", "id": "padding_bottom_mobile", "label": "Bottom padding (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 32 }
   ],
   "blocks": [
     {

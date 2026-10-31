@@ -1466,5 +1466,17 @@
         "label": "t:settings_schema.customer_accounts.settings.customer_account_menu.label"
       }
     ]
+  },
+  {
+    "name": "VK Product cards",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "vk_card_wishlist",
+        "label": "Show wishlist heart on product cards",
+        "info": "Saves favourites in the shopper's browser. Turn off if a wishlist app adds its own button.",
+        "default": true
+      }
+    ]
   }
 ]

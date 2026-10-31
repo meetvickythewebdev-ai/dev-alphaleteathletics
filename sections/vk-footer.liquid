@@ -1,57 +1,85 @@
 {{ 'vk-footer.css' | asset_url | stylesheet_tag }}
 
-{%- assign s = section.settings -%}
+{%- liquid
+  assign s = section.settings
+  assign payment_types = s.payment_types | remove: ' ' | split: ','
+-%}
 <div class="vk-footer" style="--vk-footer-bg: {{ s.background }}; --vk-footer-fg: {{ s.text_color }};">
-  <div class="vk-container vk-footer__main">
-    <div class="vk-footer__grid">
-      {%- for block in section.blocks -%}
-        <div class="vk-footer__block vk-footer__block--{{ block.type }}" style="--vk-span: {{ block.settings.span | default: 1 }};" {{ block.shopify_attributes }}>
-          {%- case block.type -%}
-            {%- when 'menu' -%}
-              <details class="vk-footer__details" data-vk-footer-details open>
-                <summary class="vk-footer__heading">
-                  <span>{{ block.settings.heading | default: block.settings.menu.title }}</span>
-                  <span class="vk-footer__chevron">{% render 'vk-icon', icon: 'plus' %}</span>
-                </summary>
+  <div class="vk-footer__main">
+    <div class="vk-container vk-footer__main-inner">
+      <div class="vk-footer__grid">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign prev_type = ''
+            if forloop.index0 > 0
+              assign prev_index = forloop.index0 | minus: 1
+              assign prev_type = section.blocks[prev_index].type
+            endif
+          -%}
+          <div
+            class="vk-footer__block vk-footer__block--{{ block.type }}{% if prev_type == 'menu' or prev_type == 'link' %} vk-footer__block--follows-list{% endif %}"
+            style="--vk-span: {{ block.settings.span | default: 1 }};"
+            {{ block.shopify_attributes }}
+          >
+            <details class="vk-footer__details" data-vk-footer-details open>
+              <summary class="vk-footer__summary">
+                <span class="vk-footer__heading">{{ block.settings.heading | default: block.settings.menu.title }}</span>
+                <span class="vk-footer__icon" aria-hidden="true">
+                  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none"><path d="M12 4V12M12 12V20M12 12H4M12 12H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none"><path d="M4 12H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+              </summary>
+              <div class="vk-footer__body">
                 <ul class="vk-list-reset vk-footer__links">
-                  {%- for link in block.settings.menu.links -%}
-                    <li><a href="{{ link.url }}" class="vk-footer__link">{{ link.title }}</a></li>
-                  {%- endfor -%}
+                  {%- case block.type -%}
+                    {%- when 'menu' -%}
+                      {%- for link in block.settings.menu.links -%}
+                        <li><a href="{{ link.url }}" class="vk-footer__link" title="{{ link.title | escape }}">{{ link.title }}</a></li>
+                      {%- endfor -%}
+                    {%- when 'link' -%}
+                      <li>
+                        <a
+                          href="{{ block.settings.url | default: '#' }}"
+                          class="vk-footer__link"
+                          title="{{ block.settings.label | escape }}"
+                          {% if block.settings.new_tab %}target="_blank" rel="noopener"{% endif %}
+                        >{{ block.settings.label }}</a>
+                      </li>
+                  {%- endcase -%}
                 </ul>
-              </details>
-            {%- when 'text' -%}
-              <details class="vk-footer__details" data-vk-footer-details open>
-                <summary class="vk-footer__heading">
-                  <span>{{ block.settings.heading }}</span>
-                  <span class="vk-footer__chevron">{% render 'vk-icon', icon: 'plus' %}</span>
-                </summary>
-                <div class="vk-footer__text">{{ block.settings.text }}</div>
-              </details>
-          {%- endcase -%}
-        </div>
-      {%- endfor -%}
-    </div>
+              </div>
+            </details>
+          </div>
+        {%- endfor -%}
 
-    {%- if s.show_social -%}
-      {% render 'vk-social-icons', class: 'vk-footer__social' %}
-    {%- endif -%}
+        {%- if s.show_social -%}
+          <div class="vk-footer__block vk-footer__block--social" style="--vk-span: 3;">
+            {% render 'vk-social-icons', class: 'vk-footer__social' %}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
   </div>
 
   <div class="vk-footer__bottom">
     <div class="vk-container vk-footer__bottom-inner">
-      <p class="vk-footer__copyright">
-        {{ s.copyright_prefix }} &copy; {{ 'now' | date: '%Y' }} {{ s.copyright_text | default: shop.name }} {{ powered_by_link }}
-      </p>
-      {%- if s.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
-        <div class="vk-footer__payment">
-          <span class="vk-visually-hidden">{{ 'sections.footer.payment' | t }}</span>
-          <ul class="vk-list-reset vk-footer__payment-list" role="list">
-            {%- for type in shop.enabled_payment_types -%}
-              <li>{{ type | payment_type_svg_tag: class: 'vk-footer__payment-icon' }}</li>
-            {%- endfor -%}
-          </ul>
+      <div class="vk-footer__bottom-grid">
+        <div class="vk-footer__copyright">
+          <p>{{ s.copyright_prefix }} &copy; {{ 'now' | date: '%Y' }} {{ s.copyright_text | default: shop.name }}{% if s.show_powered_by %} {{ powered_by_link }}.{% endif %}</p>
         </div>
-      {%- endif -%}
+        {%- if s.show_payment_icons and payment_types.size > 0 -%}
+          <div class="vk-footer__payment">
+            <span class="vk-visually-hidden">{{ 'sections.footer.payment' | t }}</span>
+            <ul class="vk-list-reset vk-footer__payment-list" role="list">
+              {%- for type in payment_types -%}
+                {%- if type != blank -%}
+                  <li class="vk-footer__payment-item">{{ type | payment_type_svg_tag: class: 'vk-footer__payment-icon' }}</li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      </div>
     </div>
   </div>
 </div>
@@ -60,10 +88,23 @@
   (() => {
     const root = document.currentScript.previousElementSibling;
     const mq = window.matchMedia('(min-width: 990px)');
-    const sync = () => root.querySelectorAll('[data-vk-footer-details]').forEach((d) => { d.open = mq.matches; });
+    const details = root.querySelectorAll('[data-vk-footer-details]');
+    const sync = () => details.forEach((d) => { d.open = mq.matches; d.classList.toggle('is-active', mq.matches); });
     sync();
     mq.addEventListener('change', sync);
-    root.querySelectorAll('[data-vk-footer-details] > summary').forEach((s) => s.addEventListener('click', (e) => { if (mq.matches) e.preventDefault(); }));
+    details.forEach((d) => {
+      d.querySelector('summary').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (mq.matches) return;
+        if (d.open) {
+          d.classList.remove('is-active');
+          setTimeout(() => { if (!d.classList.contains('is-active')) d.open = false; }, 300);
+        } else {
+          d.open = true;
+          requestAnimationFrame(() => requestAnimationFrame(() => d.classList.add('is-active')));
+        }
+      });
+    });
   })();
 </script>
 
@@ -76,9 +117,18 @@
     { "type": "color", "id": "background", "label": "Background", "default": "#111111" },
     { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },
     { "type": "checkbox", "id": "show_social", "label": "Show social icons", "info": "Links come from Theme settings > Social media.", "default": true },
-    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true },
+    { "type": "header", "content": "Bottom bar" },
     { "type": "text", "id": "copyright_prefix", "label": "Copyright prefix", "default": "Copyright" },
-    { "type": "text", "id": "copyright_text", "label": "Copyright name", "default": "FourthPhase. All rights reserved." }
+    { "type": "text", "id": "copyright_text", "label": "Copyright name", "default": "FourthPhase. All rights reserved." },
+    { "type": "checkbox", "id": "show_powered_by", "label": "Show \"Powered by Shopify\"", "default": true },
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true },
+    {
+      "type": "text",
+      "id": "payment_types",
+      "label": "Payment icons",
+      "info": "Comma-separated Shopify payment icon names, e.g. visa, master, paypal.",
+      "default": "american_express, apple_pay, diners_club, discover, google_pay, master, paypal, shopify_pay, venmo, visa"
+    }
   ],
   "blocks": [
     {
@@ -87,20 +137,22 @@
       "settings": [
         { "type": "text", "id": "heading", "label": "Heading", "default": "Help" },
         { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" },
-        { "type": "range", "id": "span", "label": "Desktop columns to span", "min": 1, "max": 3, "step": 1, "default": 1 }
+        { "type": "range", "id": "span", "label": "Desktop columns to span", "min": 1, "max": 6, "step": 1, "default": 1 }
       ]
     },
     {
-      "type": "text",
-      "name": "Text",
+      "type": "link",
+      "name": "Single link",
       "settings": [
         { "type": "text", "id": "heading", "label": "Heading", "default": "Address" },
-        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>13927 South Gessner Road, Missouri City Texas 77489, United States</p>" },
-        { "type": "range", "id": "span", "label": "Desktop columns to span", "min": 1, "max": 4, "step": 1, "default": 2 }
+        { "type": "text", "id": "label", "label": "Link text", "default": "13927 South Gessner Road, Missouri City Texas 77489, United States" },
+        { "type": "url", "id": "url", "label": "Link" },
+        { "type": "checkbox", "id": "new_tab", "label": "Open in new tab", "default": false },
+        { "type": "range", "id": "span", "label": "Desktop columns to span", "min": 1, "max": 6, "step": 1, "default": 3 }
       ]
     }
   ],
-  "presets": [ { "name": "VK Footer", "blocks": [ { "type": "menu" }, { "type": "text" } ] } ],
+  "presets": [ { "name": "VK Footer", "blocks": [ { "type": "menu" }, { "type": "link" } ] } ],
   "enabled_on": { "groups": ["footer"] }
 }
 {% endschema %}

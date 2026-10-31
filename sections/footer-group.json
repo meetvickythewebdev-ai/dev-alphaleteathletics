@@ -22,11 +22,13 @@
           }
         },
         "address": {
-          "type": "text",
+          "type": "link",
           "settings": {
             "heading": "Address",
-            "text": "<p>13927 South Gessner Road, Missouri City Texas 77489, United States</p>",
-            "span": 2
+            "label": "13927 South Gessner Road, Missouri City Texas 77489, United States",
+            "url": "https://maps.app.goo.gl/PxfWxg64dAsRUkRt5",
+            "new_tab": false,
+            "span": 3
           }
         }
       },
@@ -40,6 +42,8 @@
         "text_color": "#ffffff",
         "show_social": true,
         "show_payment_icons": true,
+        "show_powered_by": true,
+        "payment_types": "american_express, apple_pay, diners_club, discover, google_pay, master, paypal, shopify_pay, venmo, visa",
         "copyright_prefix": "Copyright",
         "copyright_text": "FourthPhase. All rights reserved."
       }

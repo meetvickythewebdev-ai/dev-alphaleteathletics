@@ -41,17 +41,19 @@
   left: 1.2rem;
   bottom: 1.2rem;
   z-index: 2;
-  display: inline-flex;
-  align-items: center;
+  display: block;
   height: 2.4rem;
   padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(17, 17, 17, 0.2);
   border-radius: 0.4rem;
   background: #fff;
   color: var(--vk-black);
-  font-family: var(--vk-font-bold);
-  font-size: 0.8rem;
-  line-height: 1.25;
+  font-family: var(--vk-font-body);
+  font-size: 8px;
+  font-weight: 500;
+  line-height: 10px;
   letter-spacing: 0.14rem;
+  text-align: center;
   text-transform: uppercase;
   pointer-events: none;
   transition: opacity 0.3s;
@@ -69,7 +71,6 @@
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 0 0 var(--vk-radius-card) var(--vk-radius-card);
   transform: translateY(100%);
   opacity: 0;
   visibility: hidden;
@@ -85,7 +86,8 @@
   transition: background-color 0.2s ease;
 }
 .vk-card__qa-text {
-  font-family: var(--vk-font-bold);
+  font-family: var(--vk-font-body);
+  font-weight: 600;
   font-size: 1rem;
   line-height: 1.6;
   letter-spacing: 0.05rem;
@@ -111,9 +113,13 @@
   padding: 0.4rem 0.8rem;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 0.4rem;
-  font-family: var(--vk-font-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
   font-size: 1rem;
-  line-height: 1.3;
+  font-weight: 500;
+  line-height: normal;
   color: #333;
   text-align: center;
   opacity: 0;
@@ -159,11 +165,10 @@
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
   color: var(--vk-black);
-  font-size: 2.2rem;
-  font-weight: 300;
-  line-height: 1;
+  font-family: Arial, sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
-.vk-card__qa-toggle span { display: block; transition: transform 0.25s ease; }
+.vk-card__qa-toggle span { display: block; font-size: 22px; font-weight: 300; line-height: 1; transition: transform 0.25s ease; }
 .vk-card__qa-toggle[aria-expanded='true'] span { transform: rotate(45deg); }
 
 @media (min-width: 769px) and (hover: hover) {
@@ -205,15 +210,19 @@
 .vk-card__size:nth-child(8) { transition-delay: 0.35s; }
 
 /* Content ------------------------------------------------------------------ */
-.vk-card__info { display: flex; flex-direction: column; gap: 0.2rem; }
-.vk-card__swatches { width: 100%; overflow: hidden; margin: 0 0 0.2rem; min-height: 2rem; }
+.vk-card__content { position: relative; display: flex; flex-direction: column; gap: 0.8rem; padding-bottom: 1.2rem; transition: opacity 0.4s ease-out, transform 0.4s ease-out; }
+.vk-card__info { display: flex; flex-direction: column; justify-content: space-between; gap: 0.2rem; }
+.vk-card__swatches { width: 100%; overflow: hidden; margin: 0; min-height: 2rem; transition: opacity 0.3s ease-in; }
 .vk-card__swatches .swiper-wrapper { align-items: center; }
 .vk-card__swatches .swiper-slide { width: auto; flex-shrink: 0; }
 .vk-swatch {
   position: relative;
   display: block;
+  box-sizing: border-box;
   width: 2rem;
   height: 2rem;
+  min-width: 2rem;
+  min-height: 2rem;
   border: 1px solid var(--vk-swatch-border);
   border-radius: 0.5rem;
   cursor: pointer;
@@ -249,16 +258,41 @@
 .vk-swatch.is-fade.is-in.is-unavailable { opacity: 0.5; }
 
 .vk-card__title {
+  display: flex;
+  gap: 0.4rem;
   margin: 0;
   font-family: var(--vk-font-bold);
-  font-weight: 400;
+  font-weight: 600;
   font-size: 1.2rem;
-  line-height: 1.25;
+  line-height: 1.5rem;
   letter-spacing: 0.048rem;
   text-transform: uppercase;
 }
 .vk-card__title-link { color: inherit; text-decoration: none; }
-.vk-card__subtitle { display: block; font-size: 1rem; line-height: 1.6; }
-.vk-card__price { display: flex; gap: 0.6rem; margin-top: 0.2rem; font-size: 1.2rem; line-height: 1.25; letter-spacing: 0.048rem; text-transform: uppercase; }
+.vk-card__subtitle { display: block; font-size: 1rem; line-height: 1.6rem; }
+.vk-card__price { display: flex; align-items: center; gap: 0.6rem; font-size: 1.2rem; font-weight: 700; line-height: 1.5rem; letter-spacing: 0.048rem; text-transform: uppercase; }
 .vk-card__price-sale { color: var(--vk-sale); }
-.vk-card__price-compare { opacity: 0.6; }
+.vk-card__price-compare { opacity: 0.6; font-weight: 400; }
+
+/* Wishlist heart (built-in; styled like the reference Swym button) ----------- */
+.vk-card__wish {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 11;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  color: #000;
+  cursor: pointer;
+}
+.vk-card__wish svg { display: block; width: 18px; height: 18px; }
+.vk-card__wish path { fill: transparent; transition: fill 0.2s; }
+.vk-card__wish[aria-pressed='true'] path { fill: #000; }

@@ -82,9 +82,9 @@ body {
 .vk-h4 { font-size: var(--vk-h4); }
 .vk-h5 { font-size: var(--vk-h5); }
 .vk-h6 { font-size: var(--vk-h6); }
-.vk-h1 strong, .vk-h2 strong, .vk-h3 strong, .vk-h4 strong, .vk-h5 strong, .vk-h6 strong { font-weight: 400; }
+.vk-h1 strong, .vk-h2 strong, .vk-h3 strong, .vk-h4 strong, .vk-h5 strong, .vk-h6 strong { font-weight: 700; }
 
-.vk-section-heading { text-transform: uppercase; padding-block: calc(var(--vk-h4) / 5); }
+.vk-section-heading { padding-block: calc(var(--vk-h4) / 5); }
 
 .vk-label {
   font-family: var(--vk-font-bold);
@@ -137,6 +137,7 @@ body {
   border-radius: var(--vk-radius-pill);
   font-family: var(--vk-font-bold);
   font-size: 1rem;
+  font-weight: 600;
   line-height: 1;
   letter-spacing: 0.1rem;
   text-transform: uppercase;
@@ -152,7 +153,7 @@ body {
 
 .vk-btn-text {
   display: inline-block;
-  padding-block: 0.4rem;
+  padding-block: 0.425rem;
   font-family: var(--vk-font-bold);
   font-size: 1rem;
   line-height: 1.25;
@@ -209,6 +210,7 @@ button:hover > .vk-hover-line { background-size: 100% 1px; background-position: 
   border-radius: 9999px;
   font-family: var(--vk-font-bold);
   font-size: 1.2rem;
+  font-weight: 600;
   line-height: 1.2;
   text-transform: uppercase;
   color: #000;
@@ -232,7 +234,8 @@ button:hover > .vk-hover-line { background-size: 100% 1px; background-position: 
   transition: opacity 0.2s;
 }
 .vk-arrow svg { width: 1.3rem; height: 1.3rem; }
-.vk-arrow[disabled], .vk-arrow.swiper-button-disabled { opacity: 0.3; cursor: default; }
+.vk-arrow[disabled], .vk-arrow.swiper-button-disabled { opacity: 0.5; cursor: default; pointer-events: none; }
+.vk-arrow--prev { transform: scaleX(-1); }
 
 /* Reveal-on-scroll --------------------------------------------------------- */
 @media (prefers-reduced-motion: no-preference) {

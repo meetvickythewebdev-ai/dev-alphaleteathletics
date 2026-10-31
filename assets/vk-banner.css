@@ -42,9 +42,11 @@
 .vk-banner__placeholder { background: #2a2a2a; fill: #555; }
 
 /* Content */
+/* Reference quirk: the bottom gradient (z-index 2) sits above the content (z-index 1),
+   so text and buttons are slightly toned down by the overlay. */
 .vk-banner__content {
   position: relative;
-  z-index: 3;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   row-gap: 1.2rem;
@@ -78,12 +80,13 @@
 .vk-banner__heading-wrap { max-width: 90.6rem; }
 .vk-banner__heading {
   color: inherit;
-  text-transform: uppercase;
   padding-block: calc(var(--vk-h2) / 5);
 }
+.vk-banner__content > :first-child { margin-top: 0; }
+.vk-banner__content > :last-child { margin-bottom: 0; }
 .vk-banner__text { font-size: var(--vk-banner-text-size, 18px); line-height: 1.25; }
 .vk-banner__text p { margin: 0; }
-.vk-banner__text strong { font-family: var(--vk-font-bold); font-weight: 400; }
+.vk-banner__text strong { font-weight: 700; }
 .vk-banner__buttons {
   display: flex;
   flex-wrap: wrap;

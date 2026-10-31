@@ -542,6 +542,8 @@
     "add_selected": "Add selected to cart",
     "select_size": "Select size",
     "total": "Total",
-    "products": "Products"
+    "products": "Products",
+    "wishlist_add": "Add to wishlist",
+    "wishlist_remove": "Remove from wishlist"
   }
 }
