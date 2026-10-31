@@ -102,7 +102,8 @@
             "title": "BRAS",
             "text": "Locked in and lifted.",
             "link": "shopify://collections/womens-sports-bras",
-            "collection": "womens-sports-bras"
+            "collection": "womens-sports-bras",
+            "image": "shopify://shop_images/W_Bra_v4_4x5.jpg"
           }
         },
         "cat3": {
@@ -111,7 +112,8 @@
             "title": "SHORTS",
             "text": "Built for full range.",
             "link": "shopify://collections/womens-shorts",
-            "collection": "womens-shorts"
+            "collection": "womens-shorts",
+            "image": "shopify://shop_images/W_Shorts_4x5.jpg"
           }
         },
         "cat4": {
@@ -120,7 +122,8 @@
             "title": "SHIRTS",
             "text": "Easy everywhere.",
             "link": "shopify://collections/womens-shirts-crops",
-            "collection": "womens-shirts-crops"
+            "collection": "womens-shirts-crops",
+            "image": "shopify://shop_images/W_Shirts_v4_4x5.jpg"
           }
         },
         "cat5": {
@@ -129,7 +132,8 @@
             "title": "LEGGINGS",
             "text": "Sculpted to you.",
             "link": "shopify://collections/womens-leggings",
-            "collection": "womens-leggings"
+            "collection": "womens-leggings",
+            "image": "shopify://shop_images/W_Legging_4x5.jpg"
           }
         },
         "cat6": {
@@ -138,7 +142,8 @@
             "title": "SWEATERS",
             "text": "Your post-session layer.",
             "link": "shopify://collections/womens-jackets-hoodies",
-            "collection": "womens-jackets-hoodies"
+            "collection": "womens-jackets-hoodies",
+            "image": "shopify://shop_images/W_Sweaters_4x5.jpg"
           }
         },
         "cat7": {
@@ -147,7 +152,8 @@
             "title": "BODYSUITS",
             "text": "One piece. Every angle.",
             "link": "shopify://collections/womens-bodysuits",
-            "collection": "womens-bodysuits"
+            "collection": "womens-bodysuits",
+            "image": "shopify://shop_images/W_Bodysuits_4x5.jpg"
           }
         },
         "cat8": {
@@ -156,7 +162,8 @@
             "title": "TANKS",
             "text": "Light. Breathable. Ready.",
             "link": "shopify://collections/womens-tank-tops",
-            "collection": "womens-tank-tops"
+            "collection": "womens-tank-tops",
+            "image": "shopify://shop_images/W_Tanks_4x5.jpg"
           }
         },
         "tab9": {
@@ -171,7 +178,8 @@
             "title": "SHIRTS",
             "text": "Train-tested, everyday-ready.",
             "link": "shopify://collections/mens-shirts",
-            "collection": "mens-shirts"
+            "collection": "mens-shirts",
+            "image": "shopify://shop_images/M_Shirts_4x5.jpg"
           }
         },
         "cat11": {
@@ -180,7 +188,8 @@
             "title": "SHORTS",
             "text": "Every session, sorted.",
             "link": "shopify://collections/mens-shorts",
-            "collection": "mens-shorts"
+            "collection": "mens-shorts",
+            "image": "shopify://shop_images/M_Shorts_v2_4x5.jpg"
           }
         },
         "cat12": {
@@ -189,7 +198,8 @@
             "title": "TANKS",
             "text": "Cut for the pump.",
             "link": "shopify://collections/mens-tanks-stringers",
-            "collection": "mens-tanks-stringers"
+            "collection": "mens-tanks-stringers",
+            "image": "shopify://shop_images/M_Tanks_v3_4x5.jpg"
           }
         },
         "cat13": {
@@ -198,7 +208,8 @@
             "title": "PANTS",
             "text": "Warmup to wind-down.",
             "link": "shopify://collections/mens-joggers",
-            "collection": "mens-joggers"
+            "collection": "mens-joggers",
+            "image": "shopify://shop_images/M_Pants_4x5.jpg"
           }
         },
         "cat14": {
@@ -207,7 +218,8 @@
             "title": "SWEATERS",
             "text": "Off-day essential.",
             "link": "shopify://collections/mens-hoodies-jackets",
-            "collection": "mens-hoodies-jackets"
+            "collection": "mens-hoodies-jackets",
+            "image": "shopify://shop_images/M_Sweaters_4x5.jpg"
           }
         }
       },
@@ -285,7 +297,9 @@
         "background": "#111111",
         "animate": true,
         "animation_delay": 150,
-        "animation_duration": 450
+        "animation_duration": 450,
+        "image": "shopify://shop_images/W_Seamless_16x9.jpg",
+        "image_mobile": "shopify://shop_images/W_Seamless_v4_4x5.jpg"
       }
     },
     "athlete_edit": {
@@ -296,7 +310,11 @@
           "settings": {
             "handle": "@sofs.travaglini",
             "cta_label": "Shop the look",
-            "products": []
+            "products": [
+              "womens-vortex-bra-mulberry",
+              "womens-pump-mid-rise-legging-v2-mulberry"
+            ],
+            "image": "shopify://shop_images/AE_Sofs_4x5.jpg"
           }
         },
         "look2": {
@@ -304,7 +322,12 @@
           "settings": {
             "handle": "@madisonodum",
             "cta_label": "Shop the look",
-            "products": []
+            "products": [
+              "womens-amplify-minimal-bra-scarlet",
+              "womens-amplify-ultra-high-rise-short-scarlet",
+              "unisex-elite-wolf-quarter-crew-sock-3pk-white"
+            ],
+            "image": "shopify://shop_images/AE_Madison_4x5.jpg"
           }
         },
         "look3": {
@@ -312,7 +335,11 @@
           "settings": {
             "handle": "@alextoplyn_ifbbpro",
             "cta_label": "Shop the look",
-            "products": []
+            "products": [
+              "mens-base-tee-dusty-navy",
+              "unisex-relay-pant-black"
+            ],
+            "image": "shopify://shop_images/AE_Alex_4x5.jpg"
           }
         },
         "look4": {
@@ -320,7 +347,11 @@
           "settings": {
             "handle": "@amyrookes",
             "cta_label": "Shop the look",
-            "products": []
+            "products": [
+              "womens-kinetic-bra-lt-heather",
+              "womens-pump-mid-rise-legging-v2-lt-heather"
+            ],
+            "image": "shopify://shop_images/AE_Amy_4x5.jpg"
           }
         },
         "look5": {
@@ -328,7 +359,12 @@
           "settings": {
             "handle": "@devynbertram",
             "cta_label": "Shop the look",
-            "products": []
+            "products": [
+              "womens-soft-curve-tee-cedar",
+              "womens-vortex-bra-cedar",
+              "unisex-relay-pant-walnut"
+            ],
+            "image": "shopify://shop_images/AE_Devyn_4x5.jpg"
           }
         },
         "look6": {
@@ -336,7 +372,11 @@
           "settings": {
             "handle": "@merijn",
             "cta_label": "Shop the look",
-            "products": []
+            "products": [
+              "mens-base-cutoff-white",
+              "mens-coreflex-jogger-metal"
+            ],
+            "image": "shopify://shop_images/AE_Merijn_4x5.jpg"
           }
         }
       },
@@ -414,7 +454,9 @@
         "background": "#111111",
         "animate": true,
         "animation_delay": 150,
-        "animation_duration": 450
+        "animation_duration": 450,
+        "image": "shopify://shop_images/MW_Comfy_Sets_16x9.jpg",
+        "image_mobile": "shopify://shop_images/MW_Comfy_Sets_4x5.jpg"
       }
     },
     "best_sellers": {
@@ -464,7 +506,8 @@
             "columns": 3,
             "rows": 2,
             "ratio": "9/16",
-            "ratio_mobile": "4/5"
+            "ratio_mobile": "4/5",
+            "image": "shopify://shop_images/W_Multi_v4_4x5.jpg"
           }
         },
         "t2": {
@@ -476,7 +519,8 @@
             "columns": 3,
             "rows": 1,
             "ratio": "1/1",
-            "ratio_mobile": "4/5"
+            "ratio_mobile": "4/5",
+            "image": "shopify://shop_images/M_Multi_4x5.jpg"
           }
         },
         "t3": {
@@ -488,7 +532,8 @@
             "columns": 3,
             "rows": 1,
             "ratio": "4/3",
-            "ratio_mobile": "4/5"
+            "ratio_mobile": "4/5",
+            "image": "shopify://shop_images/Accessories_4x5.jpg"
           }
         }
       },

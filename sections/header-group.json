@@ -86,7 +86,8 @@
             "menu_item": "Women",
             "title": "BRAS",
             "link": "/collections/womens-sports-bras",
-            "background": "#111111"
+            "background": "#111111",
+            "image": "shopify://shop_images/Mega_W_Bra_4x5.jpg"
           }
         },
         "tile2": {
@@ -95,7 +96,8 @@
             "menu_item": "Women",
             "title": "SHORTS",
             "link": "/collections/womens-shorts",
-            "background": "#111111"
+            "background": "#111111",
+            "image": "shopify://shop_images/Mega_W_Shorts_4x5.jpg"
           }
         },
         "tile3": {
@@ -104,7 +106,8 @@
             "menu_item": "Women",
             "title": "LEGGINGS",
             "link": "/collections/womens-leggings",
-            "background": "#111111"
+            "background": "#111111",
+            "image": "shopify://shop_images/Mega_W_Legging_4x5.jpg"
           }
         },
         "tile4": {
@@ -113,7 +116,8 @@
             "menu_item": "Men",
             "title": "SHIRTS",
             "link": "/collections/mens-shirts",
-            "background": "#111111"
+            "background": "#111111",
+            "image": "shopify://shop_images/M_Shirts_4x5.jpg"
           }
         },
         "tile5": {
@@ -122,7 +126,8 @@
             "menu_item": "Men",
             "title": "SHORTS",
             "link": "/collections/mens-shorts",
-            "background": "#111111"
+            "background": "#111111",
+            "image": "shopify://shop_images/Mega_M_Shorts_4x5.jpg"
           }
         },
         "tile6": {
@@ -131,7 +136,8 @@
             "menu_item": "Men",
             "title": "PANTS",
             "link": "/collections/mens-joggers",
-            "background": "#111111"
+            "background": "#111111",
+            "image": "shopify://shop_images/Mega_M_Pants_4x5.jpg"
           }
         }
       },
