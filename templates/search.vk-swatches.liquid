@@ -27,7 +27,7 @@
     {
       "id": {{ product.id }},
       "handle": {{ product.handle | json }},
-      "url": {{ product.url | json }},
+      "url": {{ product.url | split: "?" | first | json }},
       "title": {{ base_title | json }},
       "color": {{ product.metafields.custom.color_swatch.value | append: '' | json }},
       "colorName": {{ color_name | json }},

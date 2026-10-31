@@ -2,27 +2,50 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
-    "footer": {
-      "type": "footer",
-      "blocks": {},
-      "block_order": [],
+    "vk_footer": {
+      "type": "vk-footer",
+      "blocks": {
+        "help": {
+          "type": "menu",
+          "settings": {
+            "heading": "Help",
+            "menu": "",
+            "span": 1
+          }
+        },
+        "more": {
+          "type": "menu",
+          "settings": {
+            "heading": "More",
+            "menu": "",
+            "span": 1
+          }
+        },
+        "address": {
+          "type": "text",
+          "settings": {
+            "heading": "Address",
+            "text": "<p>13927 South Gessner Road, Missouri City Texas 77489, United States</p>",
+            "span": 2
+          }
+        }
+      },
+      "block_order": [
+        "help",
+        "more",
+        "address"
+      ],
       "settings": {
-        "color_scheme": "scheme-1",
-        "newsletter_enable": true,
-        "newsletter_heading": "Subscribe to our emails",
-        "enable_follow_on_shop": true,
+        "background": "#111111",
+        "text_color": "#ffffff",
         "show_social": true,
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "payment_enable": true,
-        "show_policy": true,
-        "margin_top": 0,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "show_payment_icons": true,
+        "copyright_prefix": "Copyright",
+        "copyright_text": "FourthPhase. All rights reserved."
       }
     }
   },
   "order": [
-    "footer"
+    "vk_footer"
   ]
 }
