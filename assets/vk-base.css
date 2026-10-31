@@ -256,3 +256,11 @@ body.vk-scroll-lock { overflow: hidden; }
 
 /* Hide Dawn's default page-width padding conflicts inside vk sections */
 .vk-section img { display: block; max-width: 100%; }
+
+/* Dawn hides empty elements (a:empty, div:empty); keep vk overlay links and swatches visible */
+.vk-swatch:empty,
+.vk-tile__link:empty,
+.vk-multitile__link:empty,
+.vk-card__swatches:empty,
+.vk-tabs__pill:empty,
+.vk-ae-drawer__overlay:empty { display: block; }
