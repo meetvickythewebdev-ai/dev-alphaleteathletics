@@ -1,0 +1,17 @@
+{%- comment -%}
+  vk-mega-card: image tile used in the mega menu and mobile drawer.
+  Params: block (mega_card block), sizes (img sizes attr)
+{%- endcomment -%}
+<div class="vk-tile" style="--vk-tile-bg: {{ block.settings.background }};">
+  <div class="vk-tile__media">
+    {%- if block.settings.image != blank -%}
+      {{ block.settings.image | image_url: width: 1200 | image_tag: widths: '300, 450, 600, 900, 1200', sizes: sizes, loading: 'lazy', alt: block.settings.title, class: 'vk-tile__img' }}
+    {%- endif -%}
+  </div>
+  <div class="vk-tile__content">
+    <p class="vk-tile__title">{{ block.settings.title }}</p>
+  </div>
+  {%- if block.settings.link != blank -%}
+    <a href="{{ block.settings.link }}" class="vk-tile__link"><span class="vk-visually-hidden">{{ block.settings.title }}</span></a>
+  {%- endif -%}
+</div>

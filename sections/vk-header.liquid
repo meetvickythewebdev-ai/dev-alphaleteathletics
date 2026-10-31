@@ -1,0 +1,287 @@
+{{ 'vk-header.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'vk-header.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign menu = section.settings.menu
+  assign cols = section.settings.mega_columns
+  assign last_col_start = cols | minus: 1
+  assign highlight = section.settings.highlight_text | strip | downcase
+  assign cards = section.blocks | where: 'type', 'mega_card'
+-%}
+
+<vk-header
+  class="vk-header"
+  style="--vk-logo-w: {{ section.settings.logo_width_mobile }}px; --vk-logo-w-desktop: {{ section.settings.logo_width }}px; --vk-highlight: {{ section.settings.highlight_color }};"
+  data-vk-header
+>
+  <div class="vk-container vk-header__inner">
+    <button type="button" class="vk-reset-btn vk-header__icon-btn vk-header__burger" aria-label="{{ 'sections.header.menu' | t }}" aria-controls="VkMenuDrawer" aria-expanded="false" data-vk-drawer-open>
+      {% render 'vk-icon', icon: 'menu' %}
+    </button>
+
+    <a href="{{ routes.root_url }}" class="vk-header__logo" aria-label="{{ shop.name | escape }}">
+      {%- if section.settings.logo != blank -%}
+        {{ section.settings.logo | image_url: width: 600 | image_tag: alt: shop.name, class: 'vk-header__logo-img', widths: '150, 300, 450, 600', sizes: '150px', loading: 'eager' }}
+      {%- else -%}
+        {% render 'vk-logo' %}
+      {%- endif -%}
+    </a>
+
+    <nav class="vk-header__nav" aria-label="{{ 'sections.header.menu' | t }}">
+      <ul class="vk-list-reset vk-header__nav-items">
+        {%- for link in menu.links -%}
+          {%- liquid
+            assign card_count = 0
+            for b in cards
+              if b.settings.menu_item == link.title
+                assign card_count = card_count | plus: 1
+              endif
+            endfor
+            assign has_mega = false
+            if link.links.size > 0 or card_count > 0
+              assign has_mega = true
+            endif
+          -%}
+          <li class="vk-header__item{% if has_mega %} vk-header__item--mega{% endif %}" {% if has_mega %}data-vk-mega-item{% endif %}>
+            <a
+              href="{{ link.url }}"
+              class="vk-header__link{% if link.current or link.child_active %} is-current{% endif %}"
+              {% if has_mega %}aria-haspopup="true" aria-expanded="false"{% endif %}
+            >
+              <span>{{ link.title }}</span>
+              {%- if has_mega -%}<span class="vk-header__chevron">{% render 'vk-icon', icon: 'chevron-down' %}</span>{%- endif -%}
+            </a>
+
+            {%- if has_mega -%}
+              <div class="vk-mega" data-vk-mega>
+                <div class="vk-container vk-mega__inner">
+                  <div class="vk-mega__links" style="--vk-mega-cols: {{ cols }};">
+                    {%- for group in link.links limit: last_col_start -%}
+                      <div class="vk-mega__col">
+                        {% render 'vk-mega-group', group: group, highlight: highlight, show_counts: section.settings.show_counts %}
+                      </div>
+                    {%- endfor -%}
+                    {%- if link.links.size > last_col_start -%}
+                      <div class="vk-mega__col">
+                        {%- for group in link.links offset: last_col_start -%}
+                          {% render 'vk-mega-group', group: group, highlight: highlight, show_counts: section.settings.show_counts %}
+                        {%- endfor -%}
+                      </div>
+                    {%- endif -%}
+                  </div>
+
+                  {%- if card_count > 0 -%}
+                    <ul class="vk-list-reset vk-mega__cards">
+                      {%- for block in cards -%}
+                        {%- if block.settings.menu_item == link.title -%}
+                          <li class="vk-mega__card-item" {{ block.shopify_attributes }}>
+                            {% render 'vk-mega-card', block: block, sizes: '(min-width: 990px) 16vw, 50vw' %}
+                          </li>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                </div>
+              </div>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="vk-header__utils">
+      {%- if section.settings.show_country and localization.available_countries.size > 1 -%}
+        {%- form 'localization', id: 'VkHeaderLocalization', class: 'vk-header__country' -%}
+          <label class="vk-header__country-label" for="VkHeaderCountry">
+            <span class="vk-hover-line">{{ localization.country.name }}</span>
+          </label>
+          <select id="VkHeaderCountry" name="country_code" class="vk-header__country-select" aria-label="{{ 'localization.country_label' | t }}" data-vk-country-select>
+            {%- for country in localization.available_countries -%}
+              <option value="{{ country.iso_code }}" {% if country.iso_code == localization.country.iso_code %}selected{% endif %}>
+                {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+              </option>
+            {%- endfor -%}
+          </select>
+          <input type="hidden" name="return_to" value="{{ request.path }}">
+        {%- endform -%}
+      {%- elsif section.settings.show_country -%}
+        <span class="vk-header__country"><span class="vk-header__country-label">{{ localization.country.name }}</span></span>
+      {%- endif -%}
+
+      <button type="button" class="vk-reset-btn vk-header__icon-btn" aria-label="{{ 'general.search.search' | t }}" aria-controls="VkSearchDrawer" aria-expanded="false" data-vk-search-open>
+        {% render 'vk-icon', icon: 'search' %}
+      </button>
+
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}" class="vk-header__icon-btn vk-header__account" aria-label="{{ 'customer.account.title' | t }}">
+          {% render 'vk-icon', icon: 'account' %}
+        </a>
+      {%- endif -%}
+
+      <a href="{{ routes.cart_url }}" class="vk-header__icon-btn vk-header__cart" id="cart-icon-bubble" aria-label="{{ 'templates.cart.cart' | t }}">
+        {% render 'vk-icon', icon: 'bag' %}
+        <span class="vk-header__cart-count{% if cart.item_count == 0 %} is-empty{% endif %}" data-vk-cart-count aria-hidden="true">
+          {%- if cart.item_count < 100 -%}{{ cart.item_count }}{%- endif -%}
+        </span>
+        <span class="vk-visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+
+  {%- comment -%} Search drawer {%- endcomment -%}
+  <vk-search-drawer id="VkSearchDrawer" class="vk-search" aria-hidden="true" data-section="{{ section.id }}">
+    <form action="{{ routes.search_url }}" method="get" role="search" class="vk-search__bar vk-container">
+      <span class="vk-search__icon">{% render 'vk-icon', icon: 'search' %}</span>
+      <input type="hidden" name="type" value="product">
+      <input
+        id="VkSearchInput"
+        class="vk-search__input"
+        type="search"
+        name="q"
+        placeholder="{{ section.settings.search_placeholder | escape }}"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        aria-label="{{ 'general.search.search' | t }}"
+        data-vk-search-input
+      >
+      <button type="button" class="vk-reset-btn vk-search__clear" hidden data-vk-search-clear>{{ section.settings.clear_label }}</button>
+      <button type="button" class="vk-reset-btn vk-search__close" aria-label="{{ 'accessibility.close' | t }}" data-vk-search-close>
+        {% render 'vk-icon', icon: 'close' %}
+      </button>
+    </form>
+    <div class="vk-search__results vk-container" data-vk-search-results aria-live="polite"></div>
+  </vk-search-drawer>
+
+  {%- comment -%} Mobile menu drawer {%- endcomment -%}
+  <vk-menu-drawer id="VkMenuDrawer" class="vk-drawer" aria-hidden="true">
+    <div class="vk-drawer__panel" role="dialog" aria-modal="true" aria-label="{{ 'sections.header.menu' | t }}" tabindex="-1">
+      <div class="vk-drawer__head">
+        <div class="vk-drawer__tabs" role="tablist">
+          {%- for link in menu.links -%}
+            <button
+              type="button"
+              role="tab"
+              class="vk-reset-btn vk-drawer__tab{% if forloop.first %} is-active{% endif %}"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              data-vk-drawer-tab="{{ link.handle }}"
+            >
+              {{ link.title }}
+            </button>
+          {%- endfor -%}
+        </div>
+        <button type="button" class="vk-reset-btn vk-drawer__close" aria-label="{{ 'accessibility.close' | t }}" data-vk-drawer-close>
+          {% render 'vk-icon', icon: 'close' %}
+        </button>
+      </div>
+
+      <div class="vk-drawer__body">
+        {%- for link in menu.links -%}
+          {%- liquid
+            assign card_count = 0
+            for b in cards
+              if b.settings.menu_item == link.title
+                assign card_count = card_count | plus: 1
+              endif
+            endfor
+          -%}
+          <div class="vk-drawer__panel-content{% if forloop.first %} is-active{% endif %}" data-vk-drawer-panel="{{ link.handle }}" {% unless forloop.first %}hidden{% endunless %}>
+            <div class="vk-drawer__sections">
+              {%- for group in link.links -%}
+                <div class="vk-drawer__section">
+                  <a href="{{ group.url }}" class="vk-drawer__section-title">{{ group.title }}</a>
+                  {%- if group.links.size > 0 -%}
+                    <ul class="vk-list-reset vk-drawer__section-list">
+                      {%- for child in group.links -%}
+                        {%- assign child_title = child.title | strip | downcase -%}
+                        <li>
+                          <a href="{{ child.url }}" class="vk-drawer__link{% if highlight != blank and child_title == highlight %} vk-is-highlight{% endif %}">{{ child.title }}</a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                </div>
+              {%- endfor -%}
+            </div>
+
+            {%- if card_count > 0 -%}
+              <vk-carousel
+                class="swiper vk-drawer__promo"
+                data-options='{"slidesPerView": 2.15, "spaceBetween": 12, "slidesOffsetAfter": 16, "slidesOffsetBefore": 0}'
+              >
+                <div class="swiper-wrapper">
+                  {%- for block in cards -%}
+                    {%- if block.settings.menu_item == link.title -%}
+                      <div class="swiper-slide">
+                        {% render 'vk-mega-card', block: block, sizes: '50vw' %}
+                      </div>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+              </vk-carousel>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+
+        {%- if section.settings.drawer_menu != blank -%}
+          <ul class="vk-list-reset vk-drawer__help">
+            {%- for link in section.settings.drawer_menu.links -%}
+              <li><a href="{{ link.url }}" class="vk-drawer__help-link">{{ link.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+
+      <div class="vk-drawer__foot">
+        {%- if shop.customer_accounts_enabled -%}
+          <a href="{{ routes.account_url }}" class="vk-drawer__account">
+            {% render 'vk-icon', icon: 'account' %}
+            <span>{{ 'customer.account.title' | t }}</span>
+          </a>
+        {%- endif -%}
+        <span class="vk-drawer__country">{{ localization.country.name }}</span>
+        {% render 'vk-social-icons', class: 'vk-drawer__social' %}
+      </div>
+    </div>
+  </vk-menu-drawer>
+</vk-header>
+
+{% schema %}
+{
+  "name": "VK Header",
+  "tag": "header",
+  "class": "vk-section vk-section-header",
+  "settings": [
+    { "type": "header", "content": "Logo" },
+    { "type": "image_picker", "id": "logo", "label": "Logo image", "info": "Leave empty to use the built-in wordmark." },
+    { "type": "range", "id": "logo_width", "label": "Logo width (desktop)", "min": 80, "max": 300, "step": 2, "unit": "px", "default": 150 },
+    { "type": "range", "id": "logo_width_mobile", "label": "Logo width (mobile)", "min": 60, "max": 250, "step": 2, "unit": "px", "default": 130 },
+    { "type": "header", "content": "Navigation" },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    { "type": "range", "id": "mega_columns", "label": "Mega menu link columns", "min": 2, "max": 4, "step": 1, "default": 3, "info": "Extra link groups stack in the last column." },
+    { "type": "checkbox", "id": "show_counts", "label": "Show collection product counts on hover", "default": true },
+    { "type": "text", "id": "highlight_text", "label": "Highlight links titled", "default": "Sale" },
+    { "type": "color", "id": "highlight_color", "label": "Highlight color", "default": "#ff0000" },
+    { "type": "link_list", "id": "drawer_menu", "label": "Mobile drawer help menu" },
+    { "type": "header", "content": "Utilities" },
+    { "type": "checkbox", "id": "show_country", "label": "Show country selector", "default": true },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Search for..." },
+    { "type": "text", "id": "clear_label", "label": "Search clear label", "default": "Clear" }
+  ],
+  "blocks": [
+    {
+      "type": "mega_card",
+      "name": "Mega menu tile",
+      "settings": [
+        { "type": "text", "id": "menu_item", "label": "Top menu item", "info": "Exact title of the top-level menu link this tile belongs to, e.g. Women.", "default": "Women" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Bras" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "color", "id": "background", "label": "Fallback background", "default": "#111111" }
+      ]
+    }
+  ],
+  "enabled_on": { "groups": ["header"] }
+}
+{% endschema %}

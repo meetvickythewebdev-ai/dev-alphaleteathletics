@@ -1,0 +1,35 @@
+{%- comment -%}
+  vk-predictive-search: rendered by /search/suggest?section_id=vk-predictive-search for the header search drawer.
+{%- endcomment -%}
+<div id="vk-predictive-search">
+  {%- if predictive_search.performed -%}
+    {%- assign products = predictive_search.resources.products -%}
+    {%- if products.size > 0 -%}
+      <p class="vk-search__label">{{ 'templates.search.products' | t }}</p>
+      <ul class="vk-list-reset vk-search__grid">
+        {%- for product in products -%}
+          <li>
+            <a href="{{ product.url }}" class="vk-search__item">
+              <div class="vk-search__media">
+                {%- if product.featured_media -%}
+                  {{ product.featured_media | image_url: width: 500 | image_tag: loading: 'lazy', widths: '250, 375, 500', sizes: '(min-width: 990px) 12vw, 50vw', alt: product.title }}
+                {%- endif -%}
+              </div>
+              <p class="vk-search__title">{{ product.title | split: ' - ' | first }}</p>
+              <p class="vk-search__price">{{ product.price | money }}</p>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+      <a href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&type=product" class="vk-btn-text vk-search__all">
+        {{ 'sections.featured_collection.view_all' | t }}
+      </a>
+    {%- else -%}
+      <p class="vk-search__empty">{{ 'templates.search.no_results' | t: terms: predictive_search.terms }}</p>
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{ "name": "VK Predictive search", "class": "vk-section" }
+{% endschema %}

@@ -1,0 +1,258 @@
+/* ==========================================================================
+   vk-base.css — global tokens and utilities for the Alphalete rebuild.
+   Loaded after Dawn's base.css; overrides Dawn's font variables.
+   ========================================================================== */
+
+:root {
+  --vk-font-body: 'proxima_nova', Roboto, sans-serif;
+  --vk-font-bold: 'proxima_nova_bold', Poppins, sans-serif;
+  --vk-font-extrabold: 'proxima_nova_extrabold', 'proxima_nova_bold', Poppins, sans-serif;
+
+  --font-body-family: var(--vk-font-body);
+  --font-heading-family: var(--vk-font-bold);
+  --font-heading-weight: 400;
+  --font-body-weight: 400;
+  --font-body-weight-bold: 400;
+
+  --vk-black: #111111;
+  --vk-black-rgb: 17, 17, 17;
+  --vk-white: #ffffff;
+  --vk-grey: #65706e;
+  --vk-border: #ebebeb;
+  --vk-swatch-border: #eeeeee;
+  --vk-sale: #ff0000;
+
+  --vk-gutter: 1.6rem;
+  --vk-section-unit: 1.2rem;
+  --vk-spacing-unit: 1.2rem;
+
+  --vk-h1: 4.7rem;
+  --vk-h2: 3.6rem;
+  --vk-h3: 2.7rem;
+  --vk-h4: 2.1rem;
+  --vk-h5: 1.6rem;
+  --vk-h6: 1.2rem;
+
+  --vk-radius-card: 0.8rem;
+  --vk-radius-pill: 5rem;
+  --vk-ease-drawer: cubic-bezier(0.74, -0.01, 0.26, 1);
+  --vk-duration-drawer: 450ms;
+  --vk-overlay: rgba(0, 0, 0, 0.5);
+  --vk-z-header: 800;
+  --vk-z-modal: 900;
+}
+
+@media screen and (min-width: 750px) {
+  :root {
+    --vk-gutter: 3.6rem;
+    --vk-section-unit: 1.6rem;
+    --vk-h1: 8rem;
+    --vk-h2: 6.1rem;
+    --vk-h3: 4.7rem;
+    --vk-h4: 3.6rem;
+    --vk-h5: 2.7rem;
+    --vk-h6: 2.1rem;
+  }
+}
+
+/* Base type ---------------------------------------------------------------- */
+body {
+  font-family: var(--vk-font-body);
+  font-size: 1.4rem;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: rgb(var(--vk-black-rgb));
+}
+
+@media screen and (min-width: 750px) {
+  body { font-size: 1.4rem; }
+}
+
+.vk-h1, .vk-h2, .vk-h3, .vk-h4, .vk-h5, .vk-h6 {
+  font-family: var(--vk-font-bold);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  margin: 0;
+  word-break: break-word;
+}
+.vk-h1 { font-size: var(--vk-h1); }
+.vk-h2 { font-size: var(--vk-h2); }
+.vk-h3 { font-size: var(--vk-h3); }
+.vk-h4 { font-size: var(--vk-h4); }
+.vk-h5 { font-size: var(--vk-h5); }
+.vk-h6 { font-size: var(--vk-h6); }
+.vk-h1 strong, .vk-h2 strong, .vk-h3 strong, .vk-h4 strong, .vk-h5 strong, .vk-h6 strong { font-weight: 400; }
+
+.vk-section-heading { text-transform: uppercase; padding-block: calc(var(--vk-h4) / 5); }
+
+.vk-label {
+  font-family: var(--vk-font-bold);
+  font-size: 1rem;
+  line-height: 1.25;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+}
+
+.vk-container {
+  width: 100%;
+  max-width: 100%;
+  padding-inline: var(--vk-gutter);
+  margin-inline: auto;
+}
+
+.vk-visually-hidden {
+  position: absolute !important;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+}
+
+.vk-reset-btn {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.vk-list-reset { list-style: none; margin: 0; padding: 0; }
+
+/* Buttons ------------------------------------------------------------------ */
+.vk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  min-height: 4.4rem;
+  padding: 1.6rem 2.4rem;
+  border: 1px solid transparent;
+  border-radius: var(--vk-radius-pill);
+  font-family: var(--vk-font-bold);
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.4s, background-color 0.4s, border-color 0.4s, opacity 0.3s;
+}
+.vk-btn--light { background-color: var(--vk-white); color: var(--vk-black); border-color: var(--vk-white); }
+.vk-btn--light:hover { background-color: transparent; color: var(--vk-white); }
+.vk-btn--dark { background-color: var(--vk-black); color: var(--vk-white); border-color: var(--vk-black); }
+.vk-btn--dark:hover { background-color: transparent; color: var(--vk-black); }
+
+.vk-btn-text {
+  display: inline-block;
+  padding-block: 0.4rem;
+  font-family: var(--vk-font-bold);
+  font-size: 1rem;
+  line-height: 1.25;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  color: inherit;
+  text-decoration: none;
+  background-image: linear-gradient(to right, currentColor, currentColor);
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.4s, background-position 0.4s;
+}
+.vk-btn-text:hover { background-size: 0 1px; background-position: 100% 100%; }
+
+/* Underline that grows on hover (reference .text-link--on-hover) */
+.vk-hover-line {
+  background-image: linear-gradient(to right, currentColor, currentColor);
+  background-size: 0 1px;
+  background-position: 100% 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.4s, background-position 0.4s;
+}
+.vk-hover-line:hover,
+a:hover > .vk-hover-line,
+button:hover > .vk-hover-line { background-size: 100% 1px; background-position: 0 100%; }
+
+/* Segmented pill tabs (Women's / Men's) ------------------------------------- */
+.vk-tabs {
+  position: relative;
+  display: inline-flex;
+  padding: 0.4rem;
+  border: 1px solid var(--vk-black);
+  border-radius: 9999px;
+  isolation: isolate;
+}
+.vk-tabs__pill {
+  position: absolute;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  left: 0;
+  width: 0;
+  border-radius: 9999px;
+  background: #000;
+  z-index: -1;
+  transition: transform 0.3s ease, width 0.3s ease;
+}
+.vk-tabs__btn {
+  appearance: none;
+  border: 0;
+  background: none;
+  margin: 0;
+  padding: 1rem 2.2rem;
+  border-radius: 9999px;
+  font-family: var(--vk-font-bold);
+  font-size: 1.2rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: #000;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+.vk-tabs__btn[aria-selected='true'] { color: var(--vk-white); }
+.vk-tabs:not(.is-ready) .vk-tabs__btn[aria-selected='true'] { background: #000; }
+
+/* Swiper arrow buttons ----------------------------------------------------- */
+.vk-arrows { display: flex; gap: 1.6rem; }
+.vk-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 0.8rem;
+  color: inherit;
+  transition: opacity 0.2s;
+}
+.vk-arrow svg { width: 1.3rem; height: 1.3rem; }
+.vk-arrow[disabled], .vk-arrow.swiper-button-disabled { opacity: 0.3; cursor: default; }
+
+/* Reveal-on-scroll --------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .vk-reveal { opacity: 0; transform: translateY(2rem); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .vk-reveal.is-visible { opacity: 1; transform: none; }
+}
+
+/* Page overlay used by mega menu / drawers --------------------------------- */
+.vk-page-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--vk-overlay);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: calc(var(--vk-z-header) - 1);
+}
+.vk-page-overlay.is-active { opacity: 1; visibility: visible; }
+
+body.vk-scroll-lock { overflow: hidden; }
+
+/* Hide Dawn's default page-width padding conflicts inside vk sections */
+.vk-section img { display: block; max-width: 100%; }

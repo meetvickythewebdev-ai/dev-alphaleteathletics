@@ -1,0 +1,16 @@
+{%- comment -%}
+  vk-fonts: self-hosted Proxima Nova families (uploaded to Shopify Files).
+  Each weight is its own family declared at 400, mirroring the reference.
+{%- endcomment -%}
+{%- liquid
+  assign regular = settings.vk_font_regular_url | default: 'https://cdn.shopify.com/s/files/1/0831/1370/5724/files/Proxima-Nova-Regular.woff2?v=1793450581'
+  assign bold = settings.vk_font_bold_url | default: 'https://cdn.shopify.com/s/files/1/0831/1370/5724/files/Proxima-Nova-Bold.woff2?v=1793450580'
+  assign extrabold = settings.vk_font_extrabold_url | default: 'https://cdn.shopify.com/s/files/1/0831/1370/5724/files/Proxima-Nova-Extrabold.woff2?v=1793450581'
+-%}
+<link rel="preload" as="font" href="{{ regular }}" type="font/woff2" crossorigin>
+<link rel="preload" as="font" href="{{ bold }}" type="font/woff2" crossorigin>
+<style>
+  @font-face { font-family: 'proxima_nova'; src: url('{{ regular }}') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'proxima_nova_bold'; src: url('{{ bold }}') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'proxima_nova_extrabold'; src: url('{{ extrabold }}') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+</style>

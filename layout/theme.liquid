@@ -279,6 +279,11 @@
     {% endstyle %}
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
+    {%- render 'vk-fonts' -%}
+    {{ 'vk-base.css' | asset_url | stylesheet_tag }}
+    {{ 'vk-swiper.min.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'vk-swiper.min.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'vk-global.js' | asset_url }}" defer="defer"></script>
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
 
     {%- if settings.cart_type == 'drawer' -%}
@@ -331,6 +336,7 @@
     {%- endif -%}
 
     {% sections 'header-group' %}
+    <div class="vk-page-overlay" data-vk-overlay></div>
 
     <main
       id="MainContent"

@@ -1,0 +1,89 @@
+{{ 'vk-announcement-bar.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="vk-announcement color-{{ section.settings.color_scheme }}"
+  style="--vk-ann-bg: {{ section.settings.background }}; --vk-ann-fg: {{ section.settings.text_color }};"
+  data-vk-carousel-scope
+>
+  <div class="vk-container vk-announcement__inner">
+    {%- assign messages = section.blocks | where: 'type', 'message' -%}
+    {%- if messages.size > 0 -%}
+      <vk-carousel
+        class="swiper vk-announcement__slider"
+        data-options='{"loop": {% if messages.size > 1 %}true{% else %}false{% endif %}, "speed": 300, "slidesPerView": 1, "allowTouchMove": true{% if section.settings.autoplay and messages.size > 1 %}, "autoplay": {"delay": {{ section.settings.autoplay_speed | times: 1000 }}, "disableOnInteraction": false}{% endif %}}'
+      >
+        <div class="swiper-wrapper">
+          {%- for block in messages -%}
+            <div class="swiper-slide vk-announcement__slide" {{ block.shopify_attributes }}>
+              <p class="vk-announcement__text">
+                {%- if block.settings.link != blank -%}
+                  <a href="{{ block.settings.link }}" class="vk-announcement__msg-link">{{ block.settings.text }}</a>
+                {%- else -%}
+                  {{ block.settings.text }}
+                {%- endif -%}
+              </p>
+            </div>
+          {%- endfor -%}
+        </div>
+      </vk-carousel>
+    {%- endif -%}
+
+    {%- assign links = section.blocks | where: 'type', 'link' -%}
+    {%- if links.size > 0 -%}
+      <ul class="vk-list-reset vk-announcement__links">
+        {%- for block in links -%}
+          <li {{ block.shopify_attributes }}>
+            <a href="{{ block.settings.link }}" class="vk-announcement__link" aria-label="{{ block.settings.label | escape }}">
+              <span class="vk-hover-line">{{ block.settings.label }}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "VK Announcement bar",
+  "tag": "section",
+  "class": "vk-section vk-section-announcement",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "color", "id": "background", "label": "Background", "default": "#111111" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "checkbox", "id": "autoplay", "label": "Auto-rotate messages", "default": true },
+    { "type": "range", "id": "autoplay_speed", "label": "Rotate every", "min": 2, "max": 10, "step": 1, "unit": "s", "default": 5 }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Free domestic shipping over $120" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    },
+    {
+      "type": "link",
+      "name": "Utility link",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Help" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "VK Announcement bar",
+      "blocks": [
+        { "type": "message", "settings": { "text": "Free domestic shipping over $120" } },
+        { "type": "message", "settings": { "text": "30 day returns" } },
+        { "type": "link", "settings": { "label": "Help" } }
+      ]
+    }
+  ],
+  "enabled_on": { "groups": ["header"] }
+}
+{% endschema %}
