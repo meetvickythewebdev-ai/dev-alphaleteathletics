@@ -9,7 +9,7 @@
           "type": "menu",
           "settings": {
             "heading": "Help",
-            "menu": "",
+            "menu": "footer-help",
             "span": 1
           }
         },
@@ -17,7 +17,7 @@
           "type": "menu",
           "settings": {
             "heading": "More",
-            "menu": "",
+            "menu": "footer-more",
             "span": 1
           }
         },

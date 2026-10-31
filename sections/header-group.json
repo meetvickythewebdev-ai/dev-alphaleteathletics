@@ -69,12 +69,12 @@
       "settings": {
         "logo_width": 150,
         "logo_width_mobile": 130,
-        "menu": "main-menu",
+        "menu": "mega-menu",
         "mega_columns": 3,
         "show_counts": true,
         "highlight_text": "Sale",
         "highlight_color": "#ff0000",
-        "drawer_menu": "",
+        "drawer_menu": "footer-help",
         "show_country": true,
         "search_placeholder": "Search for...",
         "clear_label": "Clear"
